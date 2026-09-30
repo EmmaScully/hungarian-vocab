@@ -22,8 +22,8 @@ class GeneratorConfig(BaseModel):
 
 
 class LLMConfig(BaseModel):
-    provider: str = "claude"
-    model: str = "claude-opus-5-5"
+    provider: str = "gemini"
+    model: str = "gemini-3.8-flash"
     effort: str = "low"
 
 
@@ -39,7 +39,7 @@ class AudioConfig(BaseModel):
 
 class NotifyConfig(BaseModel):
     email: bool = True
-    telegram: bool = True
+    telegram: bool = False
 
 
 class Config(BaseModel):

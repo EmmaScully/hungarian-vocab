@@ -2,10 +2,10 @@
 
 A weekly English → Hungarian vocabulary loop:
 
-1. **Monday 06:00 UTC** — GitHub Actions generates a new word list, with Claude filling up to
+1. **Monday 06:00 UTC** — GitHub Actions generates a new word list, with an LLM (Gemini by default, Claude optional) filling up to
    half of it from words you failed or marked "needs practice". It builds an mp3 of each
    word (English, pause, Hungarian, pause) and publishes it as a GitHub Release, then emails
-   you the list and sends it plus the audio to Telegram.
+   you the list (Telegram is optional).
 2. **During the week** — revise with flashcards on the GitHub Pages site, or listen to the
    audio (direct link, Telegram, or subscribe to the podcast feed).
 3. **Before next Monday** — switch the site to **Test** mode. Your first answer for each card is
@@ -18,7 +18,7 @@ A weekly English → Hungarian vocabulary loop:
 | Path | What |
 |---|---|
 | `src/vocab/` | Python pipeline (`uv run vocab --help`) |
-| `src/vocab/llm/` | LLM providers (Claude; add others by implementing `LLMProvider`) |
+| `src/vocab/llm/` | LLM providers (Gemini, Claude; add others by implementing `LLMProvider`) |
 | `src/vocab/audio/` | TTS providers (`edge` free/no key, `azure` free tier) and mp3 composition |
 | `src/vocab/publish/` | GitHub Release upload, podcast RSS |
 | `src/vocab/notify/` | Email (SMTP) and Telegram |
@@ -30,29 +30,32 @@ A weekly English → Hungarian vocabulary loop:
 
 ## Setup
 
-1. **Create the GitHub repo.** It must be public for free GitHub Pages. Then push:
-   ```sh
-   git remote add origin git@github.com:<you>/hungarian-vocab.git
-   git push -u origin main
-   ```
-2. **Pages:** open Settings → Pages and set Source to "GitHub Actions".
-3. **Secrets:** open Settings → Secrets and variables → Actions, and add:
-   - `ANTHROPIC_API_KEY`
-   - `SMTP_USER`, `SMTP_APP_PASSWORD` (a [Gmail app password](https://myaccount.google.com/apppasswords)), `EMAIL_TO`
-   - `TELEGRAM_BOT_TOKEN` (from @BotFather). To get `TELEGRAM_CHAT_ID`, message your bot, then open
-     `https://api.telegram.org/bot<TOKEN>/getUpdates`.
-   - Optional: `AZURE_SPEECH_KEY`, `AZURE_SPEECH_REGION` if you switch `audio.provider` to `azure`.
-4. **`config.toml`:** set `site_url` to `https://<you>.github.io/hungarian-vocab/`.
-5. **Site token:** in the site's **Settings** tab, add a
+Repo: <https://github.com/EmmaScully/hungarian-vocab>. Site: <https://emmascully.github.io/hungarian-vocab/>.
+The site URL is always `https://<username-in-lowercase>.github.io/<repo-name>/`. It is also shown
+under Settings → Pages once the first deploy has run.
+
+1. **Pages:** open Settings → Pages and set Source to "GitHub Actions".
+2. **Secrets:** open Settings → Secrets and variables → Actions. The workflows expect these:
+
+   | Secret | Used as |
+   |---|---|
+   | `GEMINI_API` | Gemini API key (free tier), for word generation |
+   | `EMAIL` | Gmail address: SMTP login and recipient |
+   | `APP_PW` | [Gmail app password](https://myaccount.google.com/apppasswords) |
+   | `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID` | Optional, later. Also set `notify.telegram = true` in `config.toml` |
+   | `ANTHROPIC_API_KEY` | Optional, only if `llm.provider = "claude"` |
+   | `AZURE_SPEECH_KEY`, `AZURE_SPEECH_REGION` | Optional, only if `audio.provider = "azure"` |
+
+3. **Site token:** in the site's **Settings** tab, add a
    [fine-grained token](https://github.com/settings/personal-access-tokens/new) scoped to this repo
    only, with **Contents: read and write**. It lives only in your browser's local storage.
-6. **First run:** go to Actions → "Weekly word list" → Run workflow. This is the full dry run.
+4. **First run:** go to Actions → "Weekly word list" → Run workflow.
 
 ## Local use
 
 ```sh
 uv sync
-set -a; source .env; set +a          # see .env.example
+set -a; source .env; set +a          # see .env.example (GEMINI_API_KEY etc.)
 uv run vocab generate --n 20 --topics "food,travel"
 uv run vocab audio                   # needs ffmpeg (sudo apt install ffmpeg)
 uv run vocab feed
@@ -87,7 +90,7 @@ The score is the average of these, as a percentage.
 3. Words that were shown but never tested.
 
 Within each group, words with more lapses come first. The rest of the list is new words from
-Claude. Every word already in the bank is excluded, so mastered words never come back.
+the LLM. Every word already in the bank is excluded, so mastered words never come back.
 
 **If you skip a test,** that week's words stay "untested" and are carried into the next list.
 
