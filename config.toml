@@ -3,7 +3,7 @@
 
 [general]
 # Public URL of the GitHub Pages site (used in emails and the podcast feed).
-site_url = "https://emmascully.github.io/hungarian-vocab/"
+site_url = "https://www.emmascully.info/hungarian-vocab/"
 data_dir = "data"
 build_dir = "build"
 

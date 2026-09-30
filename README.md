@@ -30,9 +30,10 @@ A weekly English → Hungarian vocabulary loop:
 
 ## Setup
 
-Repo: <https://github.com/EmmaScully/hungarian-vocab>. Site: <https://emmascully.github.io/hungarian-vocab/>.
-The site URL is always `https://<username-in-lowercase>.github.io/<repo-name>/`. It is also shown
-under Settings → Pages once the first deploy has run.
+Repo: <https://github.com/EmmaScully/hungarian-vocab>. Site: <https://www.emmascully.info/hungarian-vocab/>.
+The site URL is normally `https://<username-in-lowercase>.github.io/<repo-name>/`. This account has
+a custom domain, so `emmascully.github.io` redirects to `www.emmascully.info`. The live URL is
+always shown under Settings → Pages.
 
 1. **Pages:** open Settings → Pages and set Source to "GitHub Actions".
 2. **Secrets:** open Settings → Secrets and variables → Actions. The workflows expect these:
