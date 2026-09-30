@@ -1,0 +1,44 @@
+name: Apply test results
+
+# The flashcard site commits data/results/<week>-test.json with your personal token,
+# which (unlike GITHUB_TOKEN pushes) triggers this workflow.
+on:
+  push:
+    branches: [main]
+    paths: ["data/results/**"]
+  workflow_dispatch:
+
+concurrency:
+  group: data-writes
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+      - uses: astral-sh/setup-uv@v6
+      - run: uv sync --locked
+      - run: uv run vocab apply-results
+      - name: Commit word bank
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data
+          git diff --cached --quiet && exit 0
+          git commit -m "Update word bank from test results"
+          git pull --rebase
+          git push
+
+  deploy:
+    needs: apply
+    uses: ./.github/workflows/deploy-pages.yml
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
