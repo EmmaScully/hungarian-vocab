@@ -34,6 +34,7 @@ jobs:
       - run: uv sync --locked
       - name: Generate list, audio, release and feed
         env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           AZURE_SPEECH_KEY: ${{ secrets.AZURE_SPEECH_KEY }}
           AZURE_SPEECH_REGION: ${{ secrets.AZURE_SPEECH_REGION }}
@@ -74,11 +75,11 @@ jobs:
           ref: main
       - uses: astral-sh/setup-uv@v6
       - run: uv sync --locked
-      - name: Send email and Telegram
+      - name: Send notifications
         env:
-          SMTP_USER: ${{ secrets.SMTP_USER }}
-          SMTP_APP_PASSWORD: ${{ secrets.SMTP_APP_PASSWORD }}
-          EMAIL_TO: ${{ secrets.EMAIL_TO }}
+          SMTP_USER: ${{ secrets.EMAIL }}
+          SMTP_APP_PASSWORD: ${{ secrets.APP_PW }}
+          EMAIL_TO: ${{ secrets.EMAIL }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: uv run vocab notify

@@ -19,4 +19,8 @@ def get_provider(config: LLMConfig) -> LLMProvider:
         from vocab.llm.claude import ClaudeProvider
 
         return ClaudeProvider(model=config.model, effort=config.effort)
+    if config.provider == "gemini":
+        from vocab.llm.gemini import GeminiProvider
+
+        return GeminiProvider(model=config.model)
     raise ValueError(f"Unknown LLM provider: {config.provider!r}")

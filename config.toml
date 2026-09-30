@@ -3,7 +3,7 @@
 
 [general]
 # Public URL of the GitHub Pages site (used in emails and the podcast feed).
-site_url = "https://YOUR-GITHUB-USERNAME.github.io/hungarian-vocab/"
+site_url = "https://emmascully.github.io/hungarian-vocab/"
 data_dir = "data"
 build_dir = "build"
 
@@ -16,9 +16,9 @@ topics = []
 level = "beginner to lower-intermediate (CEFR A1–B1)"
 
 [llm]
-provider = "claude"
-model = "claude-opus-5-5"
-effort = "low"
+provider = "gemini"          # gemini (free tier, GEMINI_API_KEY) | claude (ANTHROPIC_API_KEY)
+model = "gemini-3.8-flash"   # for claude use e.g. "claude-opus-5-5"
+effort = "low"               # claude only
 
 [audio]
 provider = "edge"            # edge (free, no key) | azure (free F0 tier, needs AZURE_SPEECH_KEY/REGION)
@@ -31,4 +31,4 @@ slow_rate = "-30%"
 
 [notify]
 email = true
-telegram = true
+telegram = false           # enable once TELEGRAM_BOT_TOKEN/CHAT_ID secrets exist
