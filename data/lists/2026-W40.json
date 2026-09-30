@@ -1,0 +1,273 @@
+{
+  "id": "2026-W40",
+  "created": "2026-09-30T09:44:39.360905Z",
+  "topics": [
+    "bird watching",
+    "sewing",
+    "knitting",
+    "running"
+  ],
+  "cards": [
+    {
+      "id": "madár",
+      "type": "word",
+      "front_en": "bird",
+      "back_hu": "madár",
+      "word_ids": [
+        "madár"
+      ],
+      "pos": "noun",
+      "example_en": "A beautiful bird is sitting on the tree.",
+      "example_hu": "A fán egy szép madár ül.",
+      "source": "new"
+    },
+    {
+      "id": "távcső",
+      "type": "word",
+      "front_en": "binoculars",
+      "back_hu": "távcső",
+      "word_ids": [
+        "távcső"
+      ],
+      "pos": "noun",
+      "example_en": "I am looking at the birds with the binoculars.",
+      "example_hu": "A távcsővel nézem a madarakat.",
+      "source": "new"
+    },
+    {
+      "id": "fészek",
+      "type": "word",
+      "front_en": "nest",
+      "back_hu": "fészek",
+      "word_ids": [
+        "fészek"
+      ],
+      "pos": "noun",
+      "example_en": "The bird is building a nest.",
+      "example_hu": "A madár fészket épít.",
+      "source": "new"
+    },
+    {
+      "id": "repül",
+      "type": "word",
+      "front_en": "flies",
+      "back_hu": "repül",
+      "word_ids": [
+        "repül"
+      ],
+      "pos": "verb",
+      "example_en": "The eagle flies high.",
+      "example_hu": "A sas magasan repül.",
+      "source": "new"
+    },
+    {
+      "id": "toll",
+      "type": "word",
+      "front_en": "feather",
+      "back_hu": "toll",
+      "word_ids": [
+        "toll"
+      ],
+      "pos": "noun",
+      "example_en": "I found a blue feather.",
+      "example_hu": "Találtam egy kék tollat.",
+      "source": "new"
+    },
+    {
+      "id": "énekel",
+      "type": "word",
+      "front_en": "sings",
+      "back_hu": "énekel",
+      "word_ids": [
+        "énekel"
+      ],
+      "pos": "verb",
+      "example_en": "The bird sings beautifully.",
+      "example_hu": "A madár szépen énekel.",
+      "source": "new"
+    },
+    {
+      "id": "varr",
+      "type": "word",
+      "front_en": "sews",
+      "back_hu": "varr",
+      "word_ids": [
+        "varr"
+      ],
+      "pos": "verb",
+      "example_en": "Grandmother is sewing a dress.",
+      "example_hu": "A nagymama ruhát varr.",
+      "source": "new"
+    },
+    {
+      "id": "tű",
+      "type": "word",
+      "front_en": "needle",
+      "back_hu": "tű",
+      "word_ids": [
+        "tű"
+      ],
+      "pos": "noun",
+      "example_en": "The needle is very sharp.",
+      "example_hu": "A tű nagyon hegyes.",
+      "source": "new"
+    },
+    {
+      "id": "cérna",
+      "type": "word",
+      "front_en": "thread",
+      "back_hu": "cérna",
+      "word_ids": [
+        "cérna"
+      ],
+      "pos": "noun",
+      "example_en": "I am using red thread.",
+      "example_hu": "Piros cérnát használok.",
+      "source": "new"
+    },
+    {
+      "id": "olló",
+      "type": "word",
+      "front_en": "scissors",
+      "back_hu": "olló",
+      "word_ids": [
+        "olló"
+      ],
+      "pos": "noun",
+      "example_en": "Where are the small scissors?",
+      "example_hu": "Hol van a kis olló?",
+      "source": "new"
+    },
+    {
+      "id": "anyag",
+      "type": "word",
+      "front_en": "fabric",
+      "back_hu": "anyag",
+      "word_ids": [
+        "anyag"
+      ],
+      "pos": "noun",
+      "example_en": "This cotton fabric is very soft.",
+      "example_hu": "Ez a pamut anyag nagyon puha.",
+      "source": "new"
+    },
+    {
+      "id": "gomb",
+      "type": "word",
+      "front_en": "button",
+      "back_hu": "gomb",
+      "word_ids": [
+        "gomb"
+      ],
+      "pos": "noun",
+      "example_en": "A button is missing from my shirt.",
+      "example_hu": "Hiányzik egy gomb az ingemről.",
+      "source": "new"
+    },
+    {
+      "id": "köt",
+      "type": "word",
+      "front_en": "knits",
+      "back_hu": "köt",
+      "word_ids": [
+        "köt"
+      ],
+      "pos": "verb",
+      "example_en": "Peter is knitting a warm scarf.",
+      "example_hu": "Péter meleg sálat köt.",
+      "source": "new"
+    },
+    {
+      "id": "fonal",
+      "type": "word",
+      "front_en": "yarn",
+      "back_hu": "fonal",
+      "word_ids": [
+        "fonal"
+      ],
+      "pos": "noun",
+      "example_en": "I bought blue yarn in the shop.",
+      "example_hu": "Kék fonalat vettem a boltban.",
+      "source": "new"
+    },
+    {
+      "id": "gyapjú",
+      "type": "word",
+      "front_en": "wool",
+      "back_hu": "gyapjú",
+      "word_ids": [
+        "gyapjú"
+      ],
+      "pos": "noun",
+      "example_en": "This sweater is pure wool.",
+      "example_hu": "Ez a pulóver tiszta gyapjú.",
+      "source": "new"
+    },
+    {
+      "id": "minta",
+      "type": "word",
+      "front_en": "pattern",
+      "back_hu": "minta",
+      "word_ids": [
+        "minta"
+      ],
+      "pos": "noun",
+      "example_en": "This is a simple pattern.",
+      "example_hu": "Ez egy egyszerű minta.",
+      "source": "new"
+    },
+    {
+      "id": "sál",
+      "type": "word",
+      "front_en": "scarf",
+      "back_hu": "sál",
+      "word_ids": [
+        "sál"
+      ],
+      "pos": "noun",
+      "example_en": "I wear a warm scarf in winter.",
+      "example_hu": "Télen meleg sálat hordok.",
+      "source": "new"
+    },
+    {
+      "id": "fut",
+      "type": "word",
+      "front_en": "runs",
+      "back_hu": "fut",
+      "word_ids": [
+        "fut"
+      ],
+      "pos": "verb",
+      "example_en": "The boy runs fast.",
+      "example_hu": "A fiú gyorsan fut.",
+      "source": "new"
+    },
+    {
+      "id": "futócipő",
+      "type": "word",
+      "front_en": "running shoe",
+      "back_hu": "futócipő",
+      "word_ids": [
+        "futócipő"
+      ],
+      "pos": "noun",
+      "example_en": "The new running shoe is very comfortable.",
+      "example_hu": "Az új futócipő nagyon kényelmes.",
+      "source": "new"
+    },
+    {
+      "id": "verseny",
+      "type": "word",
+      "front_en": "race",
+      "back_hu": "verseny",
+      "word_ids": [
+        "verseny"
+      ],
+      "pos": "noun",
+      "example_en": "The running race will be on Sunday.",
+      "example_hu": "Vasárnap lesz a futóverseny.",
+      "source": "new"
+    }
+  ],
+  "audio_url": "https://github.com/EmmaScully/hungarian-vocab/releases/download/week-2026-W40/hungarian-vocab-2026-W40.mp3"
+}
