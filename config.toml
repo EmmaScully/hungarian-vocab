@@ -18,6 +18,8 @@ level = "beginner to lower-intermediate (CEFR A1–B1)"
 [llm]
 provider = "gemini"          # gemini (free tier, GEMINI_API_KEY) | claude (ANTHROPIC_API_KEY)
 model = "gemini-3.8-flash"   # for claude use e.g. "claude-opus-5-5"
+# Tried in order if the main model is overloaded (503) or rate-limited (429). Gemini only.
+fallback_models = ["gemini-3.7-flash", "gemini-3.5-flash"]
 effort = "low"               # claude only
 
 [audio]

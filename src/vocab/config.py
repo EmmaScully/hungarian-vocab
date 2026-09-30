@@ -24,6 +24,7 @@ class GeneratorConfig(BaseModel):
 class LLMConfig(BaseModel):
     provider: str = "gemini"
     model: str = "gemini-3.8-flash"
+    fallback_models: list[str] = []
     effort: str = "low"
 
 
