@@ -1,0 +1,87 @@
+name: Maintenance
+
+# One-off jobs for an existing week, run by hand from the Actions tab.
+on:
+  workflow_dispatch:
+    inputs:
+      task:
+        description: "What to do"
+        type: choice
+        options:
+          - add-sentences-and-writing
+          - add-sentences
+          - create-writing
+          - rebuild-audio
+          - grade-writing
+          - resend-writing-feedback
+      list_id:
+        description: "Week, e.g. 2026-W40 (blank = latest)"
+        required: false
+
+concurrency:
+  group: data-writes
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+      - uses: astral-sh/setup-uv@v6
+      - name: Install ffmpeg
+        if: ${{ inputs.task == 'rebuild-audio' }}
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends ffmpeg
+      - run: uv sync --locked
+      - name: Run task
+        env:
+          TASK: ${{ inputs.task }}
+          LIST_ID: ${{ inputs.list_id }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          WRITING_PASSWORD: ${{ secrets.WRITING_TAB }}
+          AZURE_SPEECH_KEY: ${{ secrets.AZURE_SPEECH_KEY }}
+          AZURE_SPEECH_REGION: ${{ secrets.AZURE_SPEECH_REGION }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SMTP_USER: ${{ secrets.EMAIL }}
+          SMTP_APP_PASSWORD: ${{ secrets.APP_PW }}
+          EMAIL_TO: ${{ secrets.EMAIL }}
+        run: |
+          args=()
+          if [ -n "$LIST_ID" ]; then args+=(--list-id "$LIST_ID"); fi
+          case "$TASK" in
+            add-sentences-and-writing)
+              uv run vocab sentences "${args[@]}"
+              uv run vocab writing "${args[@]}" ;;
+            add-sentences) uv run vocab sentences "${args[@]}" ;;
+            create-writing) uv run vocab writing "${args[@]}" ;;
+            rebuild-audio)
+              uv run vocab audio "${args[@]}"
+              uv run vocab release "${args[@]}"
+              uv run vocab feed ;;
+            grade-writing) uv run vocab grade-writing "${args[@]}" ;;
+            resend-writing-feedback) uv run vocab email-feedback "${args[@]}" ;;
+          esac
+      - name: Commit data
+        if: ${{ !cancelled() }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data
+          git diff --cached --quiet && exit 0
+          git commit -m "Maintenance: ${{ inputs.task }}"
+          git pull --rebase
+          git push
+
+  deploy:
+    needs: run
+    if: ${{ !cancelled() }}
+    uses: ./.github/workflows/deploy-pages.yml
+    permissions:
+      contents: read
+      pages: write
+      id-token: write

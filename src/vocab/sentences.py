@@ -1,17 +1,58 @@
-"""Future extension: sentence practice built from words in the bank.
+"""Test-only practice sentences built from a list's words.
 
-Planned design (not implemented yet):
-- `generate_sentences(llm, bank_words, n)` asks the LLM for short EN/HU sentence pairs, each
-  tagged with the bank `word_ids` it uses.
-- Results become `Card(type="sentence", word_ids=[...])` appended to a list's `cards`; the site
-  already renders cards generically, and `bank.apply_result` updates every linked word.
-- A `--with-sentences` flag on `vocab generate` / `vocab weekly` will switch it on, most likely
-  for the end-of-week test phase.
+Sentence cards are shown in the end-of-week test next to the word cards. Their ratings are
+recorded for the dashboard only — they never change the word bank.
 """
 
+from pydantic import BaseModel
+
 from vocab.llm.base import LLMProvider
-from vocab.models import BankEntry, Card
+from vocab.models import Card, GeneratedSentence, WordList, word_id
+
+SENTENCE_SYSTEM = """\
+You write short practice sentences for a native English speaker learning Hungarian.
+- Each sentence uses one to three words from the given list, inflected naturally as \
+Hungarian grammar requires.
+- Sentences are natural, everyday and short (roughly 5–12 words), at about CEFR A2–B1.
+- Give an accurate, natural English translation for each.
+- Use correct Hungarian spelling with all accents.
+- Spread the sentences across as many different list words as possible."""
 
 
-def generate_sentences(llm: LLMProvider, bank_words: list[BankEntry], n: int) -> list[Card]:
-    raise NotImplementedError("Sentence generation is a planned extension.")
+class SentenceBatch(BaseModel):
+    sentences: list[GeneratedSentence]
+
+
+def sentence_prompt(word_list: WordList, n: int) -> str:
+    words = "\n".join(f"- {c.back_hu} ({c.front_en})" for c in word_list.cards)
+    return (
+        f"Write exactly {n} practice sentences using words from this list.\n"
+        f"In `words_used`, copy the list words exactly as written below.\n\n{words}"
+    )
+
+
+def generate_sentences(llm: LLMProvider, word_list: WordList, n: int) -> list[Card]:
+    if n <= 0 or not word_list.cards:
+        return []
+    batch = llm.generate_structured(SENTENCE_SYSTEM, sentence_prompt(word_list, n), SentenceBatch)
+    known = {c.id for c in word_list.cards}
+    cards: list[Card] = []
+    seen: set[str] = set()
+    for sentence in batch.sentences:
+        en, hu = sentence.en.strip(), sentence.hu.strip()
+        if not en or not hu or hu.lower() in seen:
+            continue
+        seen.add(hu.lower())
+        cards.append(
+            Card(
+                id=f"s{len(cards) + 1}",
+                type="sentence",
+                front_en=en,
+                back_hu=hu,
+                word_ids=[w for w in map(word_id, sentence.words_used) if w in known],
+                source="new",
+            )
+        )
+        if len(cards) == n:
+            break
+    return cards

@@ -2,6 +2,7 @@ import { loadIndex, loadList, storage } from "./data.js";
 import { getSettings, putFile, saveSettings, testConnection } from "./github.js";
 import { Session } from "./srs.js";
 import { renderDashboard } from "./dashboard.js";
+import { initWriting, showWriting } from "./writing.js";
 
 const $ = (sel) => document.querySelector(sel);
 const $$ = (sel) => [...document.querySelectorAll(sel)];
@@ -19,10 +20,11 @@ const state = {
 // ---------- routing ----------
 function route() {
   const name = (location.hash || "#study").slice(1);
-  const view = ["study", "dashboard", "settings"].includes(name) ? name : "study";
+  const view = ["study", "writing", "dashboard", "settings"].includes(name) ? name : "study";
   $$(".view").forEach((v) => (v.hidden = v.id !== `view-${view}`));
   $$("[data-route]").forEach((a) => a.classList.toggle("active", a.dataset.route === view));
   if (view === "dashboard") renderDashboard(state.index);
+  if (view === "writing") showWriting(state.index);
 }
 
 // ---------- study ----------
@@ -43,7 +45,10 @@ async function selectList(id) {
     $("#list-banner").hidden = false;
     return;
   }
-  state.cards = Object.fromEntries(state.list.cards.map((c) => [c.id, c]));
+  state.sentences = state.list.sentences || [];
+  state.cards = Object.fromEntries([...state.list.cards, ...state.sentences].map((c) => [c.id, c]));
+  state.wordIds = new Set(state.list.cards.map((c) => c.id));
+  state.sentenceIds = new Set(state.sentences.map((c) => c.id));
   renderWordTable();
   startSession(false);
 }
@@ -58,7 +63,9 @@ function renderBanner() {
   } else if (storage.get(`submitted:${state.list.id}`)) {
     text = "⏳ Test submitted — the word bank updates in a minute or two.";
   } else if (state.mode === "test") {
-    text = "📝 Test mode: your FIRST answer for each card is recorded and decides which words come back next week.";
+    text =
+      "📝 Test mode: cards appear in a random direction. Your FIRST answer for each word decides which words come back next week" +
+      (state.sentences.length ? ". Sentence cards are mixed in for your own tracking only." : ".");
   } else if (latest) {
     text = "Revise during the week, then switch to Test before next Monday.";
   }
@@ -87,11 +94,21 @@ function renderWordTable() {
 }
 
 function startSession(fresh) {
-  const ids = state.list.cards.map((c) => c.id);
+  const test = state.mode === "test";
+  const words = state.list.cards.map((c) => c.id);
+  const ids = test ? [...words, ...state.sentences.map((c) => c.id)] : words;
   const saved = fresh ? null : storage.get(sessionKey());
   // Discard saved state that no longer matches the list (e.g. regenerated).
-  const valid = saved && saved.queue.every((id) => id in state.cards);
+  const valid =
+    saved &&
+    saved.queue.every((id) => id in state.cards) &&
+    saved.queue.length <= ids.length &&
+    (!test || saved.dirs); // test sessions saved before sentences/random direction existed
   state.session = new Session(ids, valid ? saved : null);
+  if (test && !valid) state.session.randomizeDirections();
+  $("#direction").disabled = test;
+  $("#direction-random").hidden = !test;
+  $("#direction").hidden = test;
   renderBanner();
   renderCard();
 }
@@ -109,7 +126,7 @@ function setFlipped(flipped) {
 
 function renderCard() {
   const s = state.session;
-  $("#progress-bar").style.width = `${(100 * s.masteredCount) / s.total}%`;
+  $("#progress-bar").style.width = `${s.total ? (100 * s.masteredCount) / s.total : 0}%`;
   $("#progress-text").textContent =
     `${s.masteredCount} / ${s.total} mastered · ${s.reviews} reviews` +
     (state.mode === "test" ? ` · ${Object.keys(s.first).length} / ${s.total} answered` : "");
@@ -119,9 +136,12 @@ function renderCard() {
   $("#finished").hidden = true;
 
   const card = state.cards[s.current];
-  const huFirst = state.direction === "hu-en";
-  $("#front-lang").textContent = huFirst ? "Magyar" : "English";
-  $("#back-lang").textContent = huFirst ? "English" : "Magyar";
+  const direction = state.mode === "test" ? s.dirs[card.id] || "en-hu" : state.direction;
+  const huFirst = direction === "hu-en";
+  const kind = card.type === "sentence" ? " · sentence" : "";
+  $("#card").classList.toggle("sentence", card.type === "sentence");
+  $("#front-lang").textContent = (huFirst ? "Magyar" : "English") + kind;
+  $("#back-lang").textContent = (huFirst ? "English" : "Magyar") + kind;
   $("#front-text").textContent = huFirst ? card.back_hu : card.front_en;
   $("#back-text").textContent = huFirst ? card.front_en : card.back_hu;
   $("#back-pos").textContent = card.pos || "";
@@ -142,11 +162,15 @@ function renderFinished() {
   const s = state.session;
   $("#session").hidden = true;
   $("#finished").hidden = false;
-  const b = s.breakdown();
+  const b = s.breakdown(state.wordIds);
   $("#finished-title").textContent = state.mode === "test" ? "Test complete" : "Revision complete";
-  $("#final-score").textContent = `${s.score()}%`;
-  $("#finished-breakdown").textContent =
-    `First answers: ${b.mastered} mastered · ${b.practice} needs practice · ${b.fail} failed`;
+  $("#final-score").textContent = `${s.score(state.wordIds)}%`;
+  let text = `Words — first answers: ${b.mastered} mastered · ${b.practice} needs practice · ${b.fail} failed`;
+  if (state.mode === "test" && state.sentences.length) {
+    const sb = s.breakdown(state.sentenceIds);
+    text += `. Sentences: ${s.score(state.sentenceIds)}% (${sb.mastered} mastered · ${sb.practice} needs practice · ${sb.fail} failed)`;
+  }
+  $("#finished-breakdown").textContent = text;
 
   const entry = indexEntry();
   const canSubmit = state.mode === "test" && !entry?.tested;
@@ -167,8 +191,10 @@ async function submitTest() {
   const result = {
     list_id: state.list.id,
     completed_at: new Date().toISOString(),
-    ratings: s.first,
-    score: s.score(),
+    ratings: s.firstFor(state.wordIds),
+    score: s.score(state.wordIds),
+    sentence_ratings: s.firstFor(state.sentenceIds),
+    sentence_score: state.sentences.length ? s.score(state.sentenceIds) : null,
   };
   const status = $("#submit-status");
   $("#btn-submit").disabled = true;
@@ -265,6 +291,7 @@ function bindSettings() {
 async function init() {
   bindStudy();
   bindSettings();
+  initWriting();
   window.addEventListener("hashchange", route);
 
   state.index = await loadIndex();

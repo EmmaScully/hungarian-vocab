@@ -50,14 +50,22 @@ def _send(host: str, port: int, user: str, password: str, msg: EmailMessage) -> 
             smtp.send_message(msg)
 
 
-def send_email(word_list: WordList, site_url: str) -> None:
+def send_email(word_list: WordList, site_url: str, has_writing: bool = False) -> None:
+    send_html_email(
+        email_subject(word_list),
+        email_html(word_list, site_url, has_writing),
+        email_text(word_list, site_url),
+    )
+
+
+def send_html_email(subject: str, html: str, text: str) -> None:
     user, password = load_credentials()
     msg = EmailMessage()
-    msg["Subject"] = email_subject(word_list)
+    msg["Subject"] = subject
     msg["From"] = user
     msg["To"] = os.environ.get("EMAIL_TO", "").strip() or user
-    msg.set_content(email_text(word_list, site_url))
-    msg.add_alternative(email_html(word_list, site_url), subtype="html")
+    msg.set_content(text)
+    msg.add_alternative(html, subtype="html")
 
     host = os.environ.get("SMTP_HOST", "smtp.gmail.com")
     port = int(os.environ.get("SMTP_PORT", "465"))

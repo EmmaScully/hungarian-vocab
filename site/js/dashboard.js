@@ -134,7 +134,13 @@ function renderTables(words, lists) {
   );
   $("#weeks-table tbody").replaceChildren(
     ...[...lists].reverse().map((e) =>
-      row(e.id, e.n_cards, (e.topics || []).join(", ") || "—", e.tested ? `${e.score}%` : "not yet"),
+      row(
+        e.id,
+        e.n_cards,
+        (e.topics || []).join(", ") || "—",
+        e.tested ? `${e.score}%` : "not yet",
+        e.sentence_score != null ? `${e.sentence_score}%` : "—",
+      ),
     ),
   );
 }

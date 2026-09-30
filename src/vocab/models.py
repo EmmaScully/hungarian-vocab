@@ -26,6 +26,16 @@ class GeneratedWord(BaseModel):
     example_en: str = Field(description="English translation of the example sentence")
 
 
+class GeneratedSentence(BaseModel):
+    """One practice sentence as returned by the LLM."""
+
+    en: str = Field(description="Natural English sentence")
+    hu: str = Field(description="Natural Hungarian translation of the sentence")
+    words_used: list[str] = Field(
+        description="The list words this sentence uses, copied exactly as given in the list"
+    )
+
+
 class Card(BaseModel):
     """A flashcard. `type="sentence"` is reserved for the sentence-practice extension."""
 
@@ -46,6 +56,9 @@ class WordList(BaseModel):
     topics: list[str] = []
     cards: list[Card]
     audio_url: str | None = None
+    # Test-only sentence cards built from this list's words. Rated in the test for personal
+    # information only: they never change the word bank.
+    sentences: list[Card] = []
 
 
 class ListIndexEntry(BaseModel):
@@ -58,6 +71,10 @@ class ListIndexEntry(BaseModel):
     audio_duration_s: float | None = None
     tested: bool = False
     score: float | None = None
+    sentence_score: float | None = None
+    has_writing: bool = False
+    writing_submitted: bool = False
+    writing_graded: bool = False
 
 
 class ListIndex(BaseModel):
@@ -104,5 +121,8 @@ class TestResult(BaseModel):
 
     list_id: str
     completed_at: datetime
-    ratings: dict[str, Rating]  # card id -> FIRST rating given in the test
+    ratings: dict[str, Rating]  # word card id -> FIRST rating given in the test
     score: float | None = None
+    # Sentence cards: recorded for the dashboard only, never applied to the word bank.
+    sentence_ratings: dict[str, Rating] = {}
+    sentence_score: float | None = None

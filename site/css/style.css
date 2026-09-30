@@ -76,7 +76,8 @@ h2 { font-size: 1.1rem; margin: 0 0 12px; }
   padding: 10px 16px; background: var(--surface); border-bottom: 1px solid var(--border);
   position: sticky; top: 0; z-index: 5;
 }
-.brand { font-weight: 700; }
+.brand { font-weight: 700; white-space: nowrap; }
+@media (max-width: 440px) { .brand-name { display: none; } .topbar nav a { padding: 6px 8px; } }
 .topbar nav { display: flex; gap: 4px; }
 .topbar nav a {
   text-decoration: none; color: var(--text-2); padding: 6px 10px; border-radius: 8px;
@@ -181,3 +182,43 @@ table.data td { padding: 6px 4px; border-bottom: 1px solid var(--grid); }
 .form .row { display: flex; gap: 8px; flex-wrap: wrap; }
 .ok { color: var(--mastered); }
 .err { color: var(--fail); }
+
+/* sentence cards */
+.card.sentence .word { font-size: clamp(1.2rem, 4.5vw, 1.6rem); font-weight: 600; }
+
+/* reading & writing */
+#view-writing h1 { font-size: 1.4rem; }
+#view-writing h2 { margin-top: 24px; }
+.en { color: var(--muted); font-weight: 400; display: none; }
+body.show-en .en { display: inline; }
+label.answer .en { display: none; margin-top: 2px; }
+body.show-en label.answer .en { display: block; }
+.passage p { margin: 0 0 12px; line-height: 1.7; }
+.passage p:last-child { margin-bottom: 0; }
+.glossary { columns: 2 180px; margin: 8px 0 0; padding-left: 18px; }
+label.answer { display: flex; flex-direction: column; gap: 6px; margin: 14px 0; }
+label.answer .q { font-weight: 600; }
+textarea {
+  font: inherit; color: var(--text); background: var(--surface); border: 1px solid var(--border);
+  border-radius: 8px; padding: 8px 10px; width: 100%; resize: vertical;
+}
+textarea[readonly] { background: var(--surface-2); }
+.counter { align-self: flex-end; }
+.row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+label.check { display: flex; align-items: center; gap: 6px; font-size: 0.9rem; color: var(--text-2); }
+.feedback-head { justify-content: space-between; }
+.feedback-head h2 { margin: 0; }
+.fb h3 { font-size: 1rem; margin: 0 0 6px; }
+.fb.verdict-correct { border-left: 4px solid var(--mastered); }
+.fb.verdict-partly-correct { border-left: 4px solid var(--practice); }
+.fb.verdict-incorrect, .fb.verdict-not-answered { border-left: 4px solid var(--fail); }
+td.wrong { color: var(--fail); }
+td.right { color: var(--mastered); }
+#feedback { margin-bottom: 24px; }
+
+@media print {
+  .topbar, .toolbar, #writing-status, #exercise, #btn-print, #writing-locked { display: none !important; }
+  body { background: #fff; color: #000; }
+  .panel, .tile { border-color: #ccc; box-shadow: none; break-inside: avoid; }
+  main { max-width: none; padding: 0; }
+}

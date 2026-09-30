@@ -88,4 +88,10 @@ def apply_pending_results(
                 if result.score is not None
                 else srs.score(list(result.ratings.values()))
             )
+            if result.sentence_ratings:
+                entry.sentence_score = (
+                    result.sentence_score
+                    if result.sentence_score is not None
+                    else srs.score(list(result.sentence_ratings.values()))
+                )
     return applied

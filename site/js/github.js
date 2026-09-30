@@ -3,12 +3,22 @@
 import { storage } from "./data.js";
 
 const API = "https://api.github.com";
+// The site is served from a custom domain, so the repo can't be guessed from the URL there.
+const DEFAULT_REPO = "EmmaScully/hungarian-vocab";
+
+async function errorMessage(res) {
+  try {
+    return `GitHub ${res.status}: ${(await res.json()).message}`;
+  } catch {
+    return `GitHub ${res.status} ${res.statusText}`.trim();
+  }
+}
 
 function guessRepo() {
   // https://owner.github.io/repo/ -> owner/repo
   const m = location.hostname.match(/^([^.]+)\.github\.io$/);
   const repo = location.pathname.split("/").filter(Boolean)[0];
-  return m && repo ? `${m[1]}/${repo}` : "";
+  return m && repo ? `${m[1]}/${repo}` : DEFAULT_REPO;
 }
 
 export function getSettings() {
@@ -36,7 +46,7 @@ function toBase64(text) {
 
 export async function testConnection({ repo, token }) {
   const res = await fetch(`${API}/repos/${repo}`, { headers: headers(token) });
-  if (!res.ok) throw new Error(`GitHub ${res.status}: ${(await res.json()).message}`);
+  if (!res.ok) throw new Error(await errorMessage(res));
   const data = await res.json();
   if (!data.permissions?.push) throw new Error("Token can read the repo but cannot write to it.");
   return data.full_name;
@@ -57,6 +67,6 @@ export async function putFile(path, content, message) {
     headers: headers(token),
     body: JSON.stringify({ message, content: toBase64(content), branch, sha }),
   });
-  if (!res.ok) throw new Error(`GitHub ${res.status}: ${(await res.json()).message}`);
-  return res.json();
+  if (!res.ok) throw new Error(await errorMessage(res));
+  return res.json().catch(() => ({}));
 }

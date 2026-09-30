@@ -17,7 +17,7 @@ def email_subject(word_list: WordList) -> str:
     return f"🇭🇺 Hungarian words for {word_list.id} ({len(word_list.cards)} words)"
 
 
-def email_html(word_list: WordList, site_url: str) -> str:
+def email_html(word_list: WordList, site_url: str, has_writing: bool = False) -> str:
     rows = "".join(
         "<tr>"
         f"<td style='padding:6px 10px'>{escape(c.front_en)}</td>"
@@ -31,6 +31,12 @@ def email_html(word_list: WordList, site_url: str) -> str:
     audio = (
         f"<a href='{escape(word_list.audio_url)}'>Download this week's mp3</a> · "
         if word_list.audio_url
+        else ""
+    )
+    writing = (
+        f"<p>📖 This week's <a href='{site_link(site_url)}#writing'>reading &amp; writing "
+        "exercise</a> is ready — submit it any time before next Monday.</p>"
+        if has_writing
         else ""
     )
     return f"""\
@@ -49,6 +55,7 @@ def email_html(word_list: WordList, site_url: str) -> str:
   </table>
   <p style="color:#666">Revise during the week, then take the <b>test</b> before next Monday
   so the word bank knows what to bring back.</p>
+  {writing}
 </div>"""
 
 

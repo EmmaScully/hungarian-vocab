@@ -12,9 +12,10 @@
 </head>
 <body>
   <header class="topbar">
-    <span class="brand">🇭🇺 Magyar</span>
+    <span class="brand">🇭🇺 <span class="brand-name">Magyar</span></span>
     <nav>
       <a href="#study" data-route="study">Study</a>
+      <a href="#writing" data-route="writing">Writing</a>
       <a href="#dashboard" data-route="dashboard">Progress</a>
       <a href="#settings" data-route="settings">Settings</a>
     </nav>
@@ -34,6 +35,7 @@
             <option value="en-hu">English → Magyar</option>
             <option value="hu-en">Magyar → English</option>
           </select>
+          <span id="direction-random" class="muted small" hidden>Random direction</span>
         </label>
       </div>
 
@@ -88,6 +90,30 @@
       </details>
     </section>
 
+    <!-- READING & WRITING (password protected, content encrypted) -->
+    <section id="view-writing" class="view" hidden>
+      <div id="writing-locked" class="panel form">
+        <h1>Reading &amp; writing</h1>
+        <p class="muted">This week's passage, questions and writing tasks are encrypted. Enter the
+          password to open them.</p>
+        <form id="unlock-form">
+          <label>Password <input type="password" name="pw" autocomplete="current-password" required></label>
+          <button type="submit" class="btn primary">Unlock</button>
+          <p id="unlock-status" class="small"></p>
+        </form>
+      </div>
+      <div id="writing-unlocked" hidden>
+        <div class="toolbar">
+          <label>Week <select id="writing-week"></select></label>
+          <label class="check"><input type="checkbox" id="show-en"> Show English</label>
+          <button type="button" id="btn-lock" class="link">Lock</button>
+        </div>
+        <div id="writing-status" class="banner" hidden></div>
+        <section id="feedback" hidden></section>
+        <article id="exercise"></article>
+      </div>
+    </section>
+
     <!-- DASHBOARD -->
     <section id="view-dashboard" class="view" hidden>
       <h1>Progress</h1>
@@ -112,7 +138,7 @@
       <div class="panel">
         <h2>Weeks</h2>
         <table class="data" id="weeks-table">
-          <thead><tr><th>Week</th><th>Words</th><th>Topics</th><th>Test</th></tr></thead>
+          <thead><tr><th>Week</th><th>Words</th><th>Topics</th><th>Test</th><th>Sentences</th></tr></thead>
           <tbody></tbody>
         </table>
       </div>

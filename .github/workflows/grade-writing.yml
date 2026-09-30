@@ -1,0 +1,56 @@
+name: Grade writing
+
+# The site commits data/writing/submissions/<week>.enc.json (encrypted) with your personal
+# token, which triggers this workflow: decrypt, grade with the LLM, save encrypted feedback,
+# redeploy the site and email the feedback.
+on:
+  push:
+    branches: [main]
+    paths: ["data/writing/submissions/**"]
+  workflow_dispatch:
+
+concurrency:
+  group: data-writes
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  grade:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+      - uses: astral-sh/setup-uv@v6
+      - run: uv sync --locked
+      - name: Grade and email feedback
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          WRITING_PASSWORD: ${{ secrets.WRITING_TAB }}
+          SMTP_USER: ${{ secrets.EMAIL }}
+          SMTP_APP_PASSWORD: ${{ secrets.APP_PW }}
+          EMAIL_TO: ${{ secrets.EMAIL }}
+        run: uv run vocab grade-writing
+      # Commit even if emailing failed, so the feedback still appears on the site.
+      - name: Commit feedback
+        if: ${{ !cancelled() }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data
+          git diff --cached --quiet && exit 0
+          git commit -m "Writing feedback"
+          git pull --rebase
+          git push
+
+  deploy:
+    needs: grade
+    if: ${{ !cancelled() }}
+    uses: ./.github/workflows/deploy-pages.yml
+    permissions:
+      contents: read
+      pages: write
+      id-token: write

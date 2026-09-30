@@ -2,7 +2,7 @@
 // the site; when serving the repo root locally (…/site/), fall back to ../data/.
 const DATA_BASE = location.pathname.includes("/site/") ? "../data/" : "data/";
 
-async function fetchJSON(path, fallback = null) {
+export async function fetchJSON(path, fallback = null) {
   try {
     const res = await fetch(DATA_BASE + path, { cache: "no-cache" });
     if (!res.ok) return fallback;

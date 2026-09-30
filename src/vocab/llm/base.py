@@ -1,12 +1,20 @@
-"""LLM provider interface. Add new providers (Gemini, OpenAI, local...) by implementing this."""
+"""LLM provider interface. Add new providers (OpenAI, local...) by implementing this."""
 
-from typing import Protocol
+from typing import Protocol, TypeVar
+
+from pydantic import BaseModel
 
 from vocab.config import LLMConfig
 from vocab.models import GeneratedWord
 
+T = TypeVar("T", bound=BaseModel)
+
 
 class LLMProvider(Protocol):
+    def generate_structured(self, system: str, prompt: str, schema: type[T]) -> T:
+        """Return the model's answer parsed into `schema`."""
+        ...
+
     def generate_words(
         self, n: int, topics: list[str], exclude: list[str], level: str
     ) -> list[GeneratedWord]:

@@ -30,6 +30,17 @@ pause_after_en = 2.0         # seconds
 pause_after_hu = 2.0
 hu_rate = "-30%"             # Hungarian speaking speed ("-30%" = slower, "+0%" = normal)
 
+[sentences]
+# Extra sentence cards in the end-of-week test, built from the week's words.
+# Their ratings are shown on the dashboard but never affect next week's list.
+n = 10
+
+[writing]
+# Weekly reading & writing exercise (password-protected tab; WRITING_TAB secret).
+level = "B1–B2"
+short_questions = 4
+long_questions = 2
+
 [notify]
 email = true
 telegram = false           # enable once TELEGRAM_BOT_TOKEN/CHAT_ID secrets exist

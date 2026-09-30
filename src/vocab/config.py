@@ -37,6 +37,16 @@ class AudioConfig(BaseModel):
     hu_rate: str = "-30%"
 
 
+class SentencesConfig(BaseModel):
+    n: int = 10
+
+
+class WritingConfig(BaseModel):
+    level: str = "B1–B2"
+    short_questions: int = 4
+    long_questions: int = 2
+
+
 class NotifyConfig(BaseModel):
     email: bool = True
     telegram: bool = False
@@ -47,6 +57,8 @@ class Config(BaseModel):
     generator: GeneratorConfig = GeneratorConfig()
     llm: LLMConfig = LLMConfig()
     audio: AudioConfig = AudioConfig()
+    sentences: SentencesConfig = SentencesConfig()
+    writing: WritingConfig = WritingConfig()
     notify: NotifyConfig = NotifyConfig()
 
 

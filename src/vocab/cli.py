@@ -136,7 +136,8 @@ def cmd_notify(args, config: Config, store: Store) -> None:
     if config.notify.email and not args.no_email:
         from vocab.notify.email import send_email
 
-        send_email(word_list, site_url)
+        entry = store.load_index().get(list_id)
+        send_email(word_list, site_url, has_writing=bool(entry and entry.has_writing))
         print("Email sent")
 
     if config.notify.telegram and not args.no_telegram:
@@ -166,10 +167,121 @@ def cmd_apply_results(args, config: Config, store: Store) -> None:
     print(f"Applied test results for: {', '.join(applied)}")
 
 
+def cmd_sentences(args, config: Config, store: Store) -> None:
+    from vocab.llm.base import get_provider
+    from vocab.sentences import generate_sentences
+
+    list_id = _resolve_list_id(store, args.list_id)
+    word_list = store.load_list(list_id)
+    word_list.sentences = generate_sentences(
+        get_provider(config.llm), word_list, config.sentences.n
+    )
+    store.save_list(word_list)
+    print(f"Added {len(word_list.sentences)} test sentences to {list_id}")
+    for card in word_list.sentences:
+        print(f"  {card.front_en} — {card.back_hu}")
+
+
+def _writing_store(config: Config, store: Store):
+    from vocab import crypto
+    from vocab.writing import WritingStore
+
+    password = crypto.password_from_env()
+    if password is None:
+        sys.exit(f"{crypto.PASSWORD_ENV} is not set (the WRITING_TAB secret).")
+    return WritingStore(store.root, password)
+
+
+def cmd_writing(args, config: Config, store: Store) -> None:
+    from vocab.llm.base import get_provider
+    from vocab.writing import generate_exercise
+
+    wstore = _writing_store(config, store)
+    list_id = _resolve_list_id(store, args.list_id)
+    index = store.load_index()
+    exercise = generate_exercise(
+        get_provider(config.llm),
+        week_id=list_id,
+        current=store.load_list(list_id),
+        index=index,
+        recent_themes=wstore.recent_themes(),
+        level=config.writing.level,
+        n_short=config.writing.short_questions,
+        n_long=config.writing.long_questions,
+    )
+    wstore.save_exercise(exercise)
+    if (entry := index.get(list_id)) is not None:
+        entry.has_writing = True
+        entry.writing_submitted = False
+        entry.writing_graded = False
+        store.save_index(index)
+    # Only the title is printed: the exercise itself stays private.
+    print(f"Created encrypted reading & writing exercise for {list_id}: {exercise.title_en}")
+
+
+def cmd_grade_writing(args, config: Config, store: Store) -> None:
+    from vocab.llm.base import get_provider
+    from vocab.writing import grade
+
+    wstore = _writing_store(config, store)
+    weeks = [args.list_id] if args.list_id else wstore.ungraded_weeks()
+    if not weeks:
+        print("No ungraded writing submissions.")
+        return
+    llm = get_provider(config.llm)
+    index = store.load_index()
+    email_errors = []
+    for week in weeks:
+        exercise, submission = wstore.load_exercise(week), wstore.load_submission(week)
+        feedback = grade(llm, exercise, submission)
+        wstore.save_feedback(feedback)
+        if (entry := index.get(week)) is not None:
+            entry.writing_submitted = entry.writing_graded = True
+        store.save_index(index)
+        print(f"Graded writing for {week}")
+        if config.notify.email and not args.no_email:
+            try:
+                _email_feedback(wstore, week)
+            except Exception as e:  # keep the saved feedback even if email fails
+                email_errors.append(f"{week}: {e}")
+    if email_errors:
+        sys.exit("Feedback saved, but emailing failed:\n" + "\n".join(email_errors))
+
+
+def _email_feedback(wstore, week: str) -> None:
+    from vocab.notify.email import send_html_email
+    from vocab.writing import feedback_email_html
+
+    exercise, submission = wstore.load_exercise(week), wstore.load_submission(week)
+    feedback = wstore.load_feedback(week)
+    send_html_email(
+        f"📝 Hungarian reading & writing feedback — {week}",
+        feedback_email_html(exercise, submission, feedback),
+        f"Reading {feedback.reading_score_pct}% · Writing {feedback.writing_score_pct}%\n\n"
+        f"{feedback.summary}\n\nFull feedback is in the Writing tab of the site.",
+    )
+    print(f"Emailed feedback for {week}")
+
+
+def cmd_email_feedback(args, config: Config, store: Store) -> None:
+    wstore = _writing_store(config, store)
+    _email_feedback(wstore, _resolve_list_id(store, args.list_id))
+
+
+def _optional_step(name: str, func, args, config: Config, store: Store) -> None:
+    """Run a non-essential weekly step; a failure is reported but doesn't stop the words/audio."""
+    try:
+        func(args, config, store)
+    except (Exception, SystemExit) as e:
+        print(f"::warning::{name} failed: {e}")
+
+
 def cmd_weekly(args, config: Config, store: Store) -> None:
     """Monday pipeline minus notifications (those run after the Pages deploy in CI)."""
     cmd_apply_results(args, config, store)
     cmd_generate(args, config, store)
+    _optional_step("Test sentences", cmd_sentences, args, config, store)
+    _optional_step("Reading & writing exercise", cmd_writing, args, config, store)
     cmd_audio(args, config, store)
     if args.skip_release:
         print("Skipping GitHub release (--skip-release)")
@@ -198,15 +310,22 @@ def build_parser() -> argparse.ArgumentParser:
         ("audio", cmd_audio, "build the practice mp3"),
         ("release", cmd_release, "upload the mp3 to a GitHub release"),
         ("notify", cmd_notify, "send email/Telegram notifications"),
+        ("sentences", cmd_sentences, "(re)generate the test sentences for a list"),
+        ("writing", cmd_writing, "(re)generate the encrypted reading & writing exercise"),
+        ("grade-writing", cmd_grade_writing, "grade submitted writing and email feedback"),
+        ("email-feedback", cmd_email_feedback, "re-send a week's writing feedback email"),
     ]:
         p = add(name, func, help)
         p.add_argument("--list-id", help="e.g. 2026-W40 (default: latest)")
-        if name == "notify":
+        if name in ("notify", "grade-writing"):
             p.add_argument("--no-email", action="store_true")
+        if name == "notify":
             p.add_argument("--no-telegram", action="store_true")
     add("feed", cmd_feed, "rebuild the podcast RSS feed")
     add("apply-results", cmd_apply_results, "apply submitted test results to the word bank")
-    weekly = add("weekly", cmd_weekly, "apply results, generate, audio, release, feed")
+    weekly = add(
+        "weekly", cmd_weekly, "apply results, generate words/sentences/writing, audio, feed"
+    )
     generate_args(weekly)
     weekly.add_argument("--list-id", default=None, help=argparse.SUPPRESS)
     weekly.add_argument("--skip-release", action="store_true")

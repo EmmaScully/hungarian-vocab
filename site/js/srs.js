@@ -31,6 +31,14 @@ export class Session {
     this.queue = state?.queue ?? shuffle(cardIds);
     this.first = state?.first ?? {};
     this.reviews = state?.reviews ?? 0;
+    // Per-card direction ("en-hu" | "hu-en"); test mode picks one at random for each card.
+    this.dirs = state?.dirs ?? {};
+  }
+
+  randomizeDirections() {
+    this.dirs = Object.fromEntries(
+      this.queue.map((id) => [id, Math.random() < 0.5 ? "en-hu" : "hu-en"]),
+    );
   }
 
   get current() { return this.queue[0] ?? null; }
@@ -47,15 +55,21 @@ export class Session {
     }
   }
 
-  breakdown() {
+  // First ratings, optionally restricted to a subset of card ids.
+  firstFor(ids = null) {
+    if (!ids) return { ...this.first };
+    return Object.fromEntries(Object.entries(this.first).filter(([id]) => ids.has(id)));
+  }
+
+  breakdown(ids = null) {
     const counts = { fail: 0, practice: 0, mastered: 0 };
-    for (const r of Object.values(this.first)) counts[r] += 1;
+    for (const r of Object.values(this.firstFor(ids))) counts[r] += 1;
     return counts;
   }
 
-  score() { return score(this.first); }
+  score(ids = null) { return score(this.firstFor(ids)); }
 
   toJSON() {
-    return { queue: this.queue, first: this.first, reviews: this.reviews };
+    return { queue: this.queue, first: this.first, reviews: this.reviews, dirs: this.dirs };
   }
 }

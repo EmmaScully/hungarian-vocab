@@ -100,12 +100,12 @@
       "source": "new"
     },
     {
-      "id": "repül",
+      "id": "repülni",
       "type": "word",
       "front_en": "to fly",
-      "back_hu": "repül",
+      "back_hu": "repülni",
       "word_ids": [
-        "repül"
+        "repülni"
       ],
       "pos": "verb",
       "example_en": "The eagle flies high.",
@@ -113,12 +113,12 @@
       "source": "new"
     },
     {
-      "id": "énekel",
+      "id": "énekelni",
       "type": "word",
       "front_en": "to sing",
-      "back_hu": "énekel",
+      "back_hu": "énekelni",
       "word_ids": [
-        "énekel"
+        "énekelni"
       ],
       "pos": "verb",
       "example_en": "In the mornings, a bird sings.",
@@ -178,12 +178,12 @@
       "source": "new"
     },
     {
-      "id": "megfigyel",
+      "id": "megfigyelni",
       "type": "word",
       "front_en": "to watch [observe]",
-      "back_hu": "megfigyel",
+      "back_hu": "megfigyelni",
       "word_ids": [
-        "megfigyel"
+        "megfigyelni"
       ],
       "pos": "verb",
       "example_en": "I like to watch the birds.",
@@ -347,12 +347,12 @@
       "source": "new"
     },
     {
-      "id": "varr",
+      "id": "varrni",
       "type": "word",
       "front_en": "to sew",
-      "back_hu": "varr",
+      "back_hu": "varrni",
       "word_ids": [
-        "varr"
+        "varrni"
       ],
       "pos": "verb",
       "example_en": "Mother is sewing a new dress.",
@@ -490,12 +490,12 @@
       "source": "new"
     },
     {
-      "id": "vág",
+      "id": "vágni",
       "type": "word",
       "front_en": "to cut",
-      "back_hu": "vág",
+      "back_hu": "vágni",
       "word_ids": [
-        "vág"
+        "vágni"
       ],
       "pos": "verb",
       "example_en": "Cut the fabric carefully.",
@@ -607,12 +607,12 @@
       "source": "new"
     },
     {
-      "id": "megstoppol",
+      "id": "megstoppolni",
       "type": "word",
       "front_en": "to darn",
-      "back_hu": "megstoppol",
+      "back_hu": "megstoppolni",
       "word_ids": [
-        "megstoppol"
+        "megstoppolni"
       ],
       "pos": "verb",
       "example_en": "I will darn your socks.",
@@ -789,12 +789,12 @@
       "source": "new"
     },
     {
-      "id": "köt",
+      "id": "kötni",
       "type": "word",
       "front_en": "to knit",
-      "back_hu": "köt",
+      "back_hu": "kötni",
       "word_ids": [
-        "köt"
+        "kötni"
       ],
       "pos": "verb",
       "example_en": "I like to knit in winter.",
@@ -958,12 +958,12 @@
       "source": "new"
     },
     {
-      "id": "gombolyít",
+      "id": "gombolyítani",
       "type": "word",
       "front_en": "to wind [yarn]",
-      "back_hu": "gombolyít",
+      "back_hu": "gombolyítani",
       "word_ids": [
-        "gombolyít"
+        "gombolyítani"
       ],
       "pos": "verb",
       "example_en": "Will you help me wind the yarn?",
@@ -971,12 +971,12 @@
       "source": "new"
     },
     {
-      "id": "horgol",
+      "id": "horgolni",
       "type": "word",
       "front_en": "to crochet",
-      "back_hu": "horgol",
+      "back_hu": "horgolni",
       "word_ids": [
-        "horgol"
+        "horgolni"
       ],
       "pos": "verb",
       "example_en": "My aunt crochets a lot.",
@@ -1010,12 +1010,12 @@
       "source": "new"
     },
     {
-      "id": "fut",
+      "id": "futni",
       "type": "word",
       "front_en": "to run",
-      "back_hu": "fut",
+      "back_hu": "futni",
       "word_ids": [
-        "fut"
+        "futni"
       ],
       "pos": "verb",
       "example_en": "I run in the park every morning.",
@@ -1075,12 +1075,12 @@
       "source": "new"
     },
     {
-      "id": "lélegzik",
+      "id": "lélegezni",
       "type": "word",
       "front_en": "to breathe",
-      "back_hu": "lélegzik",
+      "back_hu": "lélegezni",
       "word_ids": [
-        "lélegzik"
+        "lélegezni"
       ],
       "pos": "verb",
       "example_en": "It is important to breathe rhythmically.",
@@ -1205,12 +1205,12 @@
       "source": "new"
     },
     {
-      "id": "nyújt",
+      "id": "nyújtani",
       "type": "word",
       "front_en": "to stretch",
-      "back_hu": "nyújt",
+      "back_hu": "nyújtani",
       "word_ids": [
-        "nyújt"
+        "nyújtani"
       ],
       "pos": "verb",
       "example_en": "I always stretch after running.",
@@ -1309,5 +1309,6 @@
       "source": "new"
     }
   ],
-  "audio_url": "https://github.com/EmmaScully/hungarian-vocab/releases/download/week-2026-W40/hungarian-vocab-2026-W40.mp3"
+  "audio_url": "https://github.com/EmmaScully/hungarian-vocab/releases/download/week-2026-W40/hungarian-vocab-2026-W40.mp3",
+  "sentences": []
 }

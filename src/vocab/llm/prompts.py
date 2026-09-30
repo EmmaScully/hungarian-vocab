@@ -8,13 +8,13 @@ SYSTEM_PROMPT = """\
 You build vocabulary lists for a native English speaker learning Hungarian.
 
 Rules for every word:
-- Give the Hungarian word in dictionary form: nouns in nominative singular, verbs in \
-3rd person singular present indefinite (the standard Hungarian dictionary form, e.g. "eszik", \
-"megy"), adjectives in base form. Short fixed phrases are allowed when they are how the \
-idea is normally expressed.
-- Give the single most common English meaning, kept short. Give English verbs as \
-infinitives ("to fly", not "flies"), even though the Hungarian form is 3rd person. Add a \
-brief disambiguation in brackets only when the English is ambiguous, e.g. "right (correct)".
+- Give the Hungarian word in its base form: nouns in nominative singular, adjectives in \
+base form, and VERBS IN THE INFINITIVE (the -ni form, e.g. "enni", "menni", "repülni", \
+"lélegezni") — never a conjugated form like "eszik". Short fixed phrases are allowed when \
+they are how the idea is normally expressed.
+- Give the single most common English meaning, kept short. English verbs are infinitives \
+too ("to eat", "to fly"). Add a brief disambiguation in brackets only when the English is \
+ambiguous, e.g. "right (correct)".
 - Use correct Hungarian spelling with all accents (á é í ó ö ő ú ü ű).
 - The example sentence must be short, natural, and suited to the learner's level.
 - Every word must be distinct from the others and from the excluded words, including \

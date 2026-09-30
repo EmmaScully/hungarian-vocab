@@ -8,7 +8,10 @@ A weekly English → Hungarian vocabulary loop:
    you the list (Telegram is optional).
 2. **During the week** — revise with flashcards on the GitHub Pages site, or listen to the
    audio (direct link, Telegram, or subscribe to the podcast feed).
-3. **Before next Monday** — switch the site to **Test** mode. Your first answer for each card is
+3. **Any time in the week** — do the **reading & writing** exercise in the password-protected
+   Writing tab. Submitting it has Gemini mark it; the feedback is emailed to you and appears
+   in the tab.
+4. **Before next Monday** — switch the site to **Test** mode. Your first answer for each card is
    committed to the repo and applied to the word bank:
    - **Mastered** words never come back.
    - **Fail** and **needs practice** words come back in the next list.
@@ -26,6 +29,7 @@ A weekly English → Hungarian vocabulary loop:
 | `data/bank.json` | Word bank: status, ease, lapses and history of every word |
 | `data/lists/` | Weekly lists + `index.json` |
 | `data/results/` | Test results written by the site |
+| `data/writing/` | Reading & writing exercises, submissions and feedback — **encrypted** |
 | `config.toml` | Word count, review ratio, topics, model, voices, pauses |
 
 ## Setup
@@ -40,7 +44,8 @@ always shown under Settings → Pages.
 
    | Secret | Used as |
    |---|---|
-   | `GEMINI_API` | Gemini API key (free tier), for word generation |
+   | `GEMINI_API` | Gemini API key (free tier), for words, sentences, exercises and marking |
+   | `WRITING_TAB` | Password for the Writing tab; also encrypts everything in it |
    | `EMAIL` | Gmail address: SMTP login and recipient |
    | `APP_PW` | [Gmail app password](https://myaccount.google.com/apppasswords) |
    | `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID` | Optional, later. Also set `notify.telegram = true` in `config.toml` |
@@ -69,6 +74,8 @@ Other commands:
 - `vocab release`: upload the mp3.
 - `vocab notify`: send the email and Telegram message.
 - `vocab weekly`: everything except notify.
+- `vocab sentences`, `vocab writing`: add test sentences or the reading & writing exercise to a week.
+- `vocab grade-writing`, `vocab email-feedback`: mark a submission, or re-send its feedback.
 
 ## How it works
 
@@ -95,6 +102,38 @@ the LLM. Every word already in the bank is excluded, so mastered words never com
 
 **If you skip a test,** that week's words stay "untested" and are carried into the next list.
 
+## Test sentences
+
+Each list also gets 10 short sentences built from its words. They appear only in **Test**
+mode, mixed in with the words, and every card is shown in a random direction (English →
+Magyar or Magyar → English). Sentence ratings show on the dashboard, but they never change
+the word bank.
+
+## Reading & writing (private)
+
+Every Monday a B1–B2 passage is generated, with themes taken from your word lists or a
+general-interest topic. It comes with 4 short and 2 longer comprehension questions, plus a
+short and a long writing task.
+
+**Privacy.** The repo and site are public, so this tab's content is protected by encryption,
+not by hiding it:
+- The exercise, your answers and the feedback are committed only as AES-256-GCM ciphertext.
+- The key is derived from the `WRITING_TAB` password with PBKDF2-SHA256 (600k iterations).
+- The browser decrypts after you enter the password, and the password never leaves the browser.
+- Anyone can download the ciphertext, so its safety depends on the password. Use a long,
+  unique one: four or more random words is good.
+
+**Submitting.** Answers are encrypted in the browser and committed. That triggers
+`grade-writing.yml`, which decrypts the submission, asks Gemini to mark it (with feedback in
+English), saves the feedback encrypted, redeploys the site and emails the feedback to you.
+In the tab, **Save as PDF** prints the feedback to a PDF.
+
+**Maintenance workflow** (Actions → Maintenance). Tasks for an existing week:
+- Add sentences and/or the reading & writing exercise.
+- Rebuild the audio.
+- Re-grade a submission.
+- Re-send the feedback email.
+
 ## Audio: TTS and delivery options
 
 | TTS | Cost | Notes |
@@ -110,9 +149,3 @@ Each week's mp3 is delivered three ways:
 - **Telegram audio message.** Plays or saves in one tap.
 - **Podcast feed** at `<site_url>/data/feed.xml`. Subscribe in AntennaPod, Pocket Casts or Apple
   Podcasts, and new weeks download automatically.
-
-## Roadmap: sentence practice
-
-`Card.type` already supports `"sentence"`, and each card carries `word_ids`. `src/vocab/sentences.py`
-holds the stub. The plan is to generate EN/HU sentences from words in the bank for the test phase.
-A sentence rating would then update every word it contains.
