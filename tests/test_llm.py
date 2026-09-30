@@ -41,3 +41,52 @@ def test_gemini_falls_back_to_text_json():
 
 def test_prompt_without_topics_asks_for_frequent_words():
     assert "most frequently used" in user_prompt(5, [], [], "A1")
+
+
+class FlakyModels:
+    """Fails with the given status codes, then succeeds; records which model each call used."""
+
+    def __init__(self, codes):
+        self.codes = list(codes)
+        self.models = []
+
+    def generate_content(self, model, **kwargs):
+        from google.genai import errors
+
+        self.models.append(model)
+        if self.codes:
+            code = self.codes.pop(0)
+            raise errors.APIError(code, {"error": {"code": code, "message": "busy"}})
+        return SimpleNamespace(parsed=WordBatch.model_validate({"words": [WORD]}), text=None)
+
+
+def _flaky(codes, fallbacks):
+    models = FlakyModels(codes)
+    provider = GeminiProvider("main", fallback_models=fallbacks,
+                              client=SimpleNamespace(models=models), sleep=lambda s: None)
+    return provider, models
+
+
+def test_gemini_retries_then_falls_back_to_next_model():
+    provider, models = _flaky([503, 503, 503, 503, 429], ["backup"])
+    assert provider.generate_words(1, [], [], "A1")[0].hu == "kenyér"
+    assert models.models == ["main"] * 4 + ["backup"] * 2
+
+
+def test_gemini_does_not_retry_client_errors():
+    import pytest
+    from google.genai import errors
+
+    provider, models = _flaky([400], ["backup"])
+    with pytest.raises(errors.APIError):
+        provider.generate_words(1, [], [], "A1")
+    assert models.models == ["main"]
+
+
+def test_gemini_gives_up_after_all_models():
+    import pytest
+
+    provider, models = _flaky([503] * 8, ["backup"])
+    with pytest.raises(RuntimeError, match="All Gemini models unavailable"):
+        provider.generate_words(1, [], [], "A1")
+    assert len(models.models) == 8
