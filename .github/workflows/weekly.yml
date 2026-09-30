@@ -1,0 +1,84 @@
+name: Weekly word list
+
+on:
+  schedule:
+    - cron: "0 6 * * 1" # Mondays 06:00 UTC
+  workflow_dispatch:
+    inputs:
+      n:
+        description: "Number of words (blank = config default)"
+        required: false
+      topics:
+        description: "Comma-separated topics (blank = config default)"
+        required: false
+      force:
+        description: "Replace this week's list if it already exists"
+        type: boolean
+        default: false
+
+concurrency:
+  group: data-writes
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v6
+      - name: Install ffmpeg
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends ffmpeg
+      - run: uv sync --locked
+      - name: Generate list, audio, release and feed
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          AZURE_SPEECH_KEY: ${{ secrets.AZURE_SPEECH_KEY }}
+          AZURE_SPEECH_REGION: ${{ secrets.AZURE_SPEECH_REGION }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          N: ${{ inputs.n }}
+          TOPICS: ${{ inputs.topics }}
+          FORCE: ${{ inputs.force }}
+        run: |
+          args=()
+          if [ -n "$N" ]; then args+=(--n "$N"); fi
+          if [ -n "$TOPICS" ]; then args+=(--topics "$TOPICS"); fi
+          if [ "$FORCE" = "true" ]; then args+=(--force); fi
+          uv run vocab weekly "${args[@]}"
+      - name: Commit data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data
+          git diff --cached --quiet && exit 0
+          git commit -m "Word list $(date -u +%G-W%V)"
+          git pull --rebase
+          git push
+
+  deploy:
+    needs: build
+    uses: ./.github/workflows/deploy-pages.yml
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+
+  notify:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+      - uses: astral-sh/setup-uv@v6
+      - run: uv sync --locked
+      - name: Send email and Telegram
+        env:
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_APP_PASSWORD: ${{ secrets.SMTP_APP_PASSWORD }}
+          EMAIL_TO: ${{ secrets.EMAIL_TO }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: uv run vocab notify

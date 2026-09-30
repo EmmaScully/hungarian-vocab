@@ -1,0 +1,34 @@
+# Hungarian vocab trainer configuration.
+# Secrets (API keys, SMTP, Telegram) come from environment variables — see .env.example.
+
+[general]
+# Public URL of the GitHub Pages site (used in emails and the podcast feed).
+site_url = "https://YOUR-GITHUB-USERNAME.github.io/hungarian-vocab/"
+data_dir = "data"
+build_dir = "build"
+
+[generator]
+n_words = 20
+# Max share of each list taken from the "needs practice / failed / untested" bank.
+review_ratio = 0.5
+# Default topics when none are passed on the command line. Empty = high-frequency everyday words.
+topics = []
+level = "beginner to lower-intermediate (CEFR A1–B1)"
+
+[llm]
+provider = "claude"
+model = "claude-opus-5-5"
+effort = "low"
+
+[audio]
+provider = "edge"            # edge (free, no key) | azure (free F0 tier, needs AZURE_SPEECH_KEY/REGION)
+voice_en = "en-GB-SoniaNeural"
+voice_hu = "hu-HU-NoemiNeural"
+pause_after_en = 1.5         # seconds
+pause_after_hu = 3.0
+repeat_hu_slow = true        # say the Hungarian a second time, slower
+slow_rate = "-30%"
+
+[notify]
+email = true
+telegram = true
