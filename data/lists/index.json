@@ -2,17 +2,17 @@
   "lists": [
     {
       "id": "2026-W40",
-      "created": "2026-09-30T09:44:39.360905Z",
+      "created": "2026-09-30T10:09:24.356272Z",
       "topics": [
         "bird watching",
         "sewing",
         "knitting",
         "running"
       ],
-      "n_cards": 20,
+      "n_cards": 100,
       "audio_url": "https://github.com/EmmaScully/hungarian-vocab/releases/download/week-2026-W40/hungarian-vocab-2026-W40.mp3",
-      "audio_bytes": 2233649,
-      "audio_duration_s": 279.2,
+      "audio_bytes": 6636401,
+      "audio_duration_s": 829.5,
       "tested": false
     }
   ]

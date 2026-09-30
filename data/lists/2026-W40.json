@@ -1,6 +1,6 @@
 {
   "id": "2026-W40",
-  "created": "2026-09-30T09:44:39.360905Z",
+  "created": "2026-09-30T10:09:24.356272Z",
   "topics": [
     "bird watching",
     "sewing",
@@ -17,8 +17,8 @@
         "madár"
       ],
       "pos": "noun",
-      "example_en": "A beautiful bird is sitting on the tree.",
-      "example_hu": "A fán egy szép madár ül.",
+      "example_en": "The bird is sitting on the branch.",
+      "example_hu": "A madár az ágon ül.",
       "source": "new"
     },
     {
@@ -30,8 +30,8 @@
         "távcső"
       ],
       "pos": "noun",
-      "example_en": "I am looking at the birds with the binoculars.",
-      "example_hu": "A távcsővel nézem a madarakat.",
+      "example_en": "I always have binoculars with me.",
+      "example_hu": "Mindig van nálam távcső.",
       "source": "new"
     },
     {
@@ -43,21 +43,8 @@
         "fészek"
       ],
       "pos": "noun",
-      "example_en": "The bird is building a nest.",
-      "example_hu": "A madár fészket épít.",
-      "source": "new"
-    },
-    {
-      "id": "repül",
-      "type": "word",
-      "front_en": "flies",
-      "back_hu": "repül",
-      "word_ids": [
-        "repül"
-      ],
-      "pos": "verb",
-      "example_en": "The eagle flies high.",
-      "example_hu": "A sas magasan repül.",
+      "example_en": "The nest is on the tree.",
+      "example_hu": "A fészek a fán van.",
       "source": "new"
     },
     {
@@ -69,34 +56,307 @@
         "toll"
       ],
       "pos": "noun",
-      "example_en": "I found a blue feather.",
-      "example_hu": "Találtam egy kék tollat.",
+      "example_en": "I found a beautiful feather.",
+      "example_hu": "Találtam egy szép tollat.",
+      "source": "new"
+    },
+    {
+      "id": "szárny",
+      "type": "word",
+      "front_en": "wing",
+      "back_hu": "szárny",
+      "word_ids": [
+        "szárny"
+      ],
+      "pos": "noun",
+      "example_en": "The bird's wing is big.",
+      "example_hu": "A madár szárnya nagy.",
+      "source": "new"
+    },
+    {
+      "id": "csőr",
+      "type": "word",
+      "front_en": "beak",
+      "back_hu": "csőr",
+      "word_ids": [
+        "csőr"
+      ],
+      "pos": "noun",
+      "example_en": "It eats with the help of its beak.",
+      "example_hu": "A csőr segítségével eszik.",
+      "source": "new"
+    },
+    {
+      "id": "erdő",
+      "type": "word",
+      "front_en": "forest",
+      "back_hu": "erdő",
+      "word_ids": [
+        "erdő"
+      ],
+      "pos": "noun",
+      "example_en": "I like walking in the forest.",
+      "example_hu": "Szeretek az erdőben sétálni.",
+      "source": "new"
+    },
+    {
+      "id": "repül",
+      "type": "word",
+      "front_en": "to fly",
+      "back_hu": "repül",
+      "word_ids": [
+        "repül"
+      ],
+      "pos": "verb",
+      "example_en": "The eagle flies high.",
+      "example_hu": "A sas magasan repül.",
       "source": "new"
     },
     {
       "id": "énekel",
       "type": "word",
-      "front_en": "sings",
+      "front_en": "to sing",
       "back_hu": "énekel",
       "word_ids": [
         "énekel"
       ],
       "pos": "verb",
-      "example_en": "The bird sings beautifully.",
-      "example_hu": "A madár szépen énekel.",
+      "example_en": "In the mornings, a bird sings.",
+      "example_hu": "Reggelente egy madár énekel.",
+      "source": "new"
+    },
+    {
+      "id": "ég",
+      "type": "word",
+      "front_en": "sky",
+      "back_hu": "ég",
+      "word_ids": [
+        "ég"
+      ],
+      "pos": "noun",
+      "example_en": "The sky is blue.",
+      "example_hu": "Kék az ég.",
+      "source": "new"
+    },
+    {
+      "id": "természet",
+      "type": "word",
+      "front_en": "nature",
+      "back_hu": "természet",
+      "word_ids": [
+        "természet"
+      ],
+      "pos": "noun",
+      "example_en": "We are going into nature on the weekend.",
+      "example_hu": "Hétvégén megyünk a természetbe.",
+      "source": "new"
+    },
+    {
+      "id": "faj",
+      "type": "word",
+      "front_en": "species",
+      "back_hu": "faj",
+      "word_ids": [
+        "faj"
+      ],
+      "pos": "noun",
+      "example_en": "This is a rare species.",
+      "example_hu": "Ez egy ritka faj.",
+      "source": "new"
+    },
+    {
+      "id": "vándorlás",
+      "type": "word",
+      "front_en": "migration",
+      "back_hu": "vándorlás",
+      "word_ids": [
+        "vándorlás"
+      ],
+      "pos": "noun",
+      "example_en": "Migration begins in autumn.",
+      "example_hu": "Ősszel kezdődik a vándorlás.",
+      "source": "new"
+    },
+    {
+      "id": "megfigyel",
+      "type": "word",
+      "front_en": "to watch [observe]",
+      "back_hu": "megfigyel",
+      "word_ids": [
+        "megfigyel"
+      ],
+      "pos": "verb",
+      "example_en": "I like to watch the birds.",
+      "example_hu": "Szeretem megfigyelni a madarakat.",
+      "source": "new"
+    },
+    {
+      "id": "fecske",
+      "type": "word",
+      "front_en": "swallow",
+      "back_hu": "fecske",
+      "word_ids": [
+        "fecske"
+      ],
+      "pos": "noun",
+      "example_en": "The swallow builds a nest.",
+      "example_hu": "A fecske fészket épít.",
+      "source": "new"
+    },
+    {
+      "id": "sas",
+      "type": "word",
+      "front_en": "eagle",
+      "back_hu": "sas",
+      "word_ids": [
+        "sas"
+      ],
+      "pos": "noun",
+      "example_en": "The eagle is a bird of prey.",
+      "example_hu": "A sas egy ragadozó madár.",
+      "source": "new"
+    },
+    {
+      "id": "bagoly",
+      "type": "word",
+      "front_en": "owl",
+      "back_hu": "bagoly",
+      "word_ids": [
+        "bagoly"
+      ],
+      "pos": "noun",
+      "example_en": "The owl hunts at night.",
+      "example_hu": "A bagoly éjszaka vadászik.",
+      "source": "new"
+    },
+    {
+      "id": "kacsa",
+      "type": "word",
+      "front_en": "duck",
+      "back_hu": "kacsa",
+      "word_ids": [
+        "kacsa"
+      ],
+      "pos": "noun",
+      "example_en": "A duck is swimming in the lake.",
+      "example_hu": "A tóban úszik egy kacsa.",
+      "source": "new"
+    },
+    {
+      "id": "hattyú",
+      "type": "word",
+      "front_en": "swan",
+      "back_hu": "hattyú",
+      "word_ids": [
+        "hattyú"
+      ],
+      "pos": "noun",
+      "example_en": "The swan is white and beautiful.",
+      "example_hu": "A hattyú fehér és gyönyörű.",
+      "source": "new"
+    },
+    {
+      "id": "veréb",
+      "type": "word",
+      "front_en": "sparrow",
+      "back_hu": "veréb",
+      "word_ids": [
+        "veréb"
+      ],
+      "pos": "noun",
+      "example_en": "There are many sparrows in the garden.",
+      "example_hu": "Sok veréb van a kertben.",
+      "source": "new"
+    },
+    {
+      "id": "harkály",
+      "type": "word",
+      "front_en": "woodpecker",
+      "back_hu": "harkály",
+      "word_ids": [
+        "harkály"
+      ],
+      "pos": "noun",
+      "example_en": "The woodpecker is tapping on the tree.",
+      "example_hu": "A harkály kopogtat a fán.",
+      "source": "new"
+    },
+    {
+      "id": "tojás",
+      "type": "word",
+      "front_en": "egg",
+      "back_hu": "tojás",
+      "word_ids": [
+        "tojás"
+      ],
+      "pos": "noun",
+      "example_en": "There are four eggs in the nest.",
+      "example_hu": "Négy tojás van a fészekben.",
+      "source": "new"
+    },
+    {
+      "id": "ragadozó",
+      "type": "word",
+      "front_en": "predator",
+      "back_hu": "ragadozó",
+      "word_ids": [
+        "ragadozó"
+      ],
+      "pos": "noun",
+      "example_en": "The eagle is a large predator.",
+      "example_hu": "A sas egy nagy ragadozó.",
+      "source": "new"
+    },
+    {
+      "id": "énekesmadár",
+      "type": "word",
+      "front_en": "songbird",
+      "back_hu": "énekesmadár",
+      "word_ids": [
+        "énekesmadár"
+      ],
+      "pos": "noun",
+      "example_en": "The thrush is a songbird.",
+      "example_hu": "A rigó egy énekesmadár.",
+      "source": "new"
+    },
+    {
+      "id": "etető",
+      "type": "word",
+      "front_en": "feeder [bird]",
+      "back_hu": "etető",
+      "word_ids": [
+        "etető"
+      ],
+      "pos": "noun",
+      "example_en": "In winter I fill up the feeder.",
+      "example_hu": "Télen feltöltöm az etetőt.",
+      "source": "new"
+    },
+    {
+      "id": "odú",
+      "type": "word",
+      "front_en": "hollow [tree hole]",
+      "back_hu": "odú",
+      "word_ids": [
+        "odú"
+      ],
+      "pos": "noun",
+      "example_en": "The squirrel lives in a hollow.",
+      "example_hu": "A mókus egy odúban lakik.",
       "source": "new"
     },
     {
       "id": "varr",
       "type": "word",
-      "front_en": "sews",
+      "front_en": "to sew",
       "back_hu": "varr",
       "word_ids": [
         "varr"
       ],
       "pos": "verb",
-      "example_en": "Grandmother is sewing a dress.",
-      "example_hu": "A nagymama ruhát varr.",
+      "example_en": "Mother is sewing a new dress.",
+      "example_hu": "Anya egy új ruhát varr.",
       "source": "new"
     },
     {
@@ -126,19 +386,6 @@
       "source": "new"
     },
     {
-      "id": "olló",
-      "type": "word",
-      "front_en": "scissors",
-      "back_hu": "olló",
-      "word_ids": [
-        "olló"
-      ],
-      "pos": "noun",
-      "example_en": "Where are the small scissors?",
-      "example_hu": "Hol van a kis olló?",
-      "source": "new"
-    },
-    {
       "id": "anyag",
       "type": "word",
       "front_en": "fabric",
@@ -152,6 +399,19 @@
       "source": "new"
     },
     {
+      "id": "olló",
+      "type": "word",
+      "front_en": "scissors",
+      "back_hu": "olló",
+      "word_ids": [
+        "olló"
+      ],
+      "pos": "noun",
+      "example_en": "Where are the tailor's scissors?",
+      "example_hu": "Hol van a szabóolló?",
+      "source": "new"
+    },
+    {
       "id": "gomb",
       "type": "word",
       "front_en": "button",
@@ -160,21 +420,268 @@
         "gomb"
       ],
       "pos": "noun",
-      "example_en": "A button is missing from my shirt.",
-      "example_hu": "Hiányzik egy gomb az ingemről.",
+      "example_en": "A button fell off my shirt.",
+      "example_hu": "Leesett egy gomb az ingemről.",
       "source": "new"
     },
     {
-      "id": "köt",
+      "id": "cipzár",
       "type": "word",
-      "front_en": "knits",
-      "back_hu": "köt",
+      "front_en": "zipper",
+      "back_hu": "cipzár",
       "word_ids": [
-        "köt"
+        "cipzár"
+      ],
+      "pos": "noun",
+      "example_en": "The zipper on my coat broke.",
+      "example_hu": "Elromlott a cipzár a kabátomon.",
+      "source": "new"
+    },
+    {
+      "id": "varrógép",
+      "type": "word",
+      "front_en": "sewing machine",
+      "back_hu": "varrógép",
+      "word_ids": [
+        "varrógép"
+      ],
+      "pos": "noun",
+      "example_en": "This sewing machine is very old.",
+      "example_hu": "Ez a varrógép nagyon régi.",
+      "source": "new"
+    },
+    {
+      "id": "szabásminta",
+      "type": "word",
+      "front_en": "sewing pattern",
+      "back_hu": "szabásminta",
+      "word_ids": [
+        "szabásminta"
+      ],
+      "pos": "noun",
+      "example_en": "I copy the pattern onto the paper.",
+      "example_hu": "Kimásolom a szabásmintát a papírra.",
+      "source": "new"
+    },
+    {
+      "id": "szabó",
+      "type": "word",
+      "front_en": "tailor",
+      "back_hu": "szabó",
+      "word_ids": [
+        "szabó"
+      ],
+      "pos": "noun",
+      "example_en": "The tailor takes measurements.",
+      "example_hu": "A szabó méretet vesz.",
+      "source": "new"
+    },
+    {
+      "id": "varrat",
+      "type": "word",
+      "front_en": "seam",
+      "back_hu": "varrat",
+      "word_ids": [
+        "varrat"
+      ],
+      "pos": "noun",
+      "example_en": "The seam ripped.",
+      "example_hu": "A varrat elszakadt.",
+      "source": "new"
+    },
+    {
+      "id": "vág",
+      "type": "word",
+      "front_en": "to cut",
+      "back_hu": "vág",
+      "word_ids": [
+        "vág"
       ],
       "pos": "verb",
-      "example_en": "Peter is knitting a warm scarf.",
-      "example_hu": "Péter meleg sálat köt.",
+      "example_en": "Cut the fabric carefully.",
+      "example_hu": "Óvatosan vágd az anyagot.",
+      "source": "new"
+    },
+    {
+      "id": "gombostű",
+      "type": "word",
+      "front_en": "pin",
+      "back_hu": "gombostű",
+      "word_ids": [
+        "gombostű"
+      ],
+      "pos": "noun",
+      "example_en": "Secure the fabric with a pin.",
+      "example_hu": "Rögzítsd az anyagot gombostűvel.",
+      "source": "new"
+    },
+    {
+      "id": "mérőszalag",
+      "type": "word",
+      "front_en": "measuring tape",
+      "back_hu": "mérőszalag",
+      "word_ids": [
+        "mérőszalag"
+      ],
+      "pos": "noun",
+      "example_en": "The measuring tape is one meter long.",
+      "example_hu": "A mérőszalag egy méter hosszú.",
+      "source": "new"
+    },
+    {
+      "id": "gyűszű",
+      "type": "word",
+      "front_en": "thimble",
+      "back_hu": "gyűszű",
+      "word_ids": [
+        "gyűszű"
+      ],
+      "pos": "noun",
+      "example_en": "The thimble protects my finger.",
+      "example_hu": "A gyűszű védi az ujjamat.",
+      "source": "new"
+    },
+    {
+      "id": "zseb",
+      "type": "word",
+      "front_en": "pocket",
+      "back_hu": "zseb",
+      "word_ids": [
+        "zseb"
+      ],
+      "pos": "noun",
+      "example_en": "The trousers have two pockets.",
+      "example_hu": "A nadrágon két zseb van.",
+      "source": "new"
+    },
+    {
+      "id": "gallér",
+      "type": "word",
+      "front_en": "collar",
+      "back_hu": "gallér",
+      "word_ids": [
+        "gallér"
+      ],
+      "pos": "noun",
+      "example_en": "The collar is too tight.",
+      "example_hu": "A gallér túl szűk.",
+      "source": "new"
+    },
+    {
+      "id": "ujj",
+      "type": "word",
+      "front_en": "sleeve",
+      "back_hu": "ujj",
+      "word_ids": [
+        "ujj"
+      ],
+      "pos": "noun",
+      "example_en": "This sleeve is too long.",
+      "example_hu": "Ez az ujj túl hosszú.",
+      "source": "new"
+    },
+    {
+      "id": "selyem",
+      "type": "word",
+      "front_en": "silk",
+      "back_hu": "selyem",
+      "word_ids": [
+        "selyem"
+      ],
+      "pos": "noun",
+      "example_en": "Silk is a very fine fabric.",
+      "example_hu": "A selyem nagyon finom anyag.",
+      "source": "new"
+    },
+    {
+      "id": "pamut",
+      "type": "word",
+      "front_en": "cotton",
+      "back_hu": "pamut",
+      "word_ids": [
+        "pamut"
+      ],
+      "pos": "noun",
+      "example_en": "This t-shirt is pure cotton.",
+      "example_hu": "Ez a póló tiszta pamut.",
+      "source": "new"
+    },
+    {
+      "id": "megstoppol",
+      "type": "word",
+      "front_en": "to darn",
+      "back_hu": "megstoppol",
+      "word_ids": [
+        "megstoppol"
+      ],
+      "pos": "verb",
+      "example_en": "I will darn your socks.",
+      "example_hu": "Megstoppolom a zoknidat.",
+      "source": "new"
+    },
+    {
+      "id": "folt",
+      "type": "word",
+      "front_en": "patch",
+      "back_hu": "folt",
+      "word_ids": [
+        "folt"
+      ],
+      "pos": "noun",
+      "example_en": "I am sewing a patch onto the pants.",
+      "example_hu": "Egy foltot varrok a nadrágra.",
+      "source": "new"
+    },
+    {
+      "id": "gumi",
+      "type": "word",
+      "front_en": "elastic [band]",
+      "back_hu": "gumi",
+      "word_ids": [
+        "gumi"
+      ],
+      "pos": "noun",
+      "example_en": "There is elastic in the waist of the pants.",
+      "example_hu": "A nadrág derekában gumi van.",
+      "source": "new"
+    },
+    {
+      "id": "csipke",
+      "type": "word",
+      "front_en": "lace",
+      "back_hu": "csipke",
+      "word_ids": [
+        "csipke"
+      ],
+      "pos": "noun",
+      "example_en": "The edge of the dress is decorated with lace.",
+      "example_hu": "A ruha szélét csipke díszíti.",
+      "source": "new"
+    },
+    {
+      "id": "szegély",
+      "type": "word",
+      "front_en": "hem",
+      "back_hu": "szegély",
+      "word_ids": [
+        "szegély"
+      ],
+      "pos": "noun",
+      "example_en": "The hem of the skirt needs to be sewn up.",
+      "example_hu": "A szoknya szegélyét fel kell varrni.",
+      "source": "new"
+    },
+    {
+      "id": "bélés",
+      "type": "word",
+      "front_en": "lining",
+      "back_hu": "bélés",
+      "word_ids": [
+        "bélés"
+      ],
+      "pos": "noun",
+      "example_en": "The coat's lining is warm.",
+      "example_hu": "A kabát bélése meleg.",
       "source": "new"
     },
     {
@@ -186,8 +693,34 @@
         "fonal"
       ],
       "pos": "noun",
-      "example_en": "I bought blue yarn in the shop.",
-      "example_hu": "Kék fonalat vettem a boltban.",
+      "example_en": "I bought blue yarn for the scarf.",
+      "example_hu": "Kék fonalat vettem a sálhoz.",
+      "source": "new"
+    },
+    {
+      "id": "kötőtű",
+      "type": "word",
+      "front_en": "knitting needle",
+      "back_hu": "kötőtű",
+      "word_ids": [
+        "kötőtű"
+      ],
+      "pos": "noun",
+      "example_en": "I progress faster with thick knitting needles.",
+      "example_hu": "Vastag kötőtűvel gyorsabban haladok.",
+      "source": "new"
+    },
+    {
+      "id": "szem",
+      "type": "word",
+      "front_en": "stitch [knitting]",
+      "back_hu": "szem",
+      "word_ids": [
+        "szem"
+      ],
+      "pos": "noun",
+      "example_en": "A stitch dropped from the needle.",
+      "example_hu": "Leesett egy szem a tűről.",
       "source": "new"
     },
     {
@@ -204,19 +737,6 @@
       "source": "new"
     },
     {
-      "id": "minta",
-      "type": "word",
-      "front_en": "pattern",
-      "back_hu": "minta",
-      "word_ids": [
-        "minta"
-      ],
-      "pos": "noun",
-      "example_en": "This is a simple pattern.",
-      "example_hu": "Ez egy egyszerű minta.",
-      "source": "new"
-    },
-    {
       "id": "sál",
       "type": "word",
       "front_en": "scarf",
@@ -225,34 +745,346 @@
         "sál"
       ],
       "pos": "noun",
-      "example_en": "I wear a warm scarf in winter.",
-      "example_hu": "Télen meleg sálat hordok.",
+      "example_en": "I am knitting a warm scarf for winter.",
+      "example_hu": "Meleg sálat kötök télre.",
+      "source": "new"
+    },
+    {
+      "id": "pulóver",
+      "type": "word",
+      "front_en": "sweater",
+      "back_hu": "pulóver",
+      "word_ids": [
+        "pulóver"
+      ],
+      "pos": "noun",
+      "example_en": "This sweater is very comfortable.",
+      "example_hu": "Ez a pulóver nagyon kényelmes.",
+      "source": "new"
+    },
+    {
+      "id": "sapka",
+      "type": "word",
+      "front_en": "hat",
+      "back_hu": "sapka",
+      "word_ids": [
+        "sapka"
+      ],
+      "pos": "noun",
+      "example_en": "I knitted a red hat.",
+      "example_hu": "Kötöttem egy piros sapkát.",
+      "source": "new"
+    },
+    {
+      "id": "zokni",
+      "type": "word",
+      "front_en": "socks",
+      "back_hu": "zokni",
+      "word_ids": [
+        "zokni"
+      ],
+      "pos": "noun",
+      "example_en": "Grandma is knitting socks.",
+      "example_hu": "A nagymama zoknit köt.",
+      "source": "new"
+    },
+    {
+      "id": "köt",
+      "type": "word",
+      "front_en": "to knit",
+      "back_hu": "köt",
+      "word_ids": [
+        "köt"
+      ],
+      "pos": "verb",
+      "example_en": "I like to knit in winter.",
+      "example_hu": "Szeretek télen kötni.",
+      "source": "new"
+    },
+    {
+      "id": "hurok",
+      "type": "word",
+      "front_en": "loop",
+      "back_hu": "hurok",
+      "word_ids": [
+        "hurok"
+      ],
+      "pos": "noun",
+      "example_en": "Pull the yarn through the loop.",
+      "example_hu": "Húzd át a fonalat a hurkon.",
+      "source": "new"
+    },
+    {
+      "id": "gombolyag",
+      "type": "word",
+      "front_en": "ball of yarn",
+      "back_hu": "gombolyag",
+      "word_ids": [
+        "gombolyag"
+      ],
+      "pos": "noun",
+      "example_en": "The cat is playing with the ball of yarn.",
+      "example_hu": "A macska játszik a gombolyaggal.",
+      "source": "new"
+    },
+    {
+      "id": "horgolótű",
+      "type": "word",
+      "front_en": "crochet hook",
+      "back_hu": "horgolótű",
+      "word_ids": [
+        "horgolótű"
+      ],
+      "pos": "noun",
+      "example_en": "Where is my size three crochet hook?",
+      "example_hu": "Hol van a hármas horgolótűm?",
+      "source": "new"
+    },
+    {
+      "id": "mintázat",
+      "type": "word",
+      "front_en": "pattern [design]",
+      "back_hu": "mintázat",
+      "word_ids": [
+        "mintázat"
+      ],
+      "pos": "noun",
+      "example_en": "The pattern on this blanket is beautiful.",
+      "example_hu": "Szép a mintázat ezen a takarón.",
+      "source": "new"
+    },
+    {
+      "id": "kézimunka",
+      "type": "word",
+      "front_en": "needlework",
+      "back_hu": "kézimunka",
+      "word_ids": [
+        "kézimunka"
+      ],
+      "pos": "noun",
+      "example_en": "Needlework calms me down.",
+      "example_hu": "A kézimunka megnyugtat.",
+      "source": "new"
+    },
+    {
+      "id": "puha",
+      "type": "word",
+      "front_en": "soft",
+      "back_hu": "puha",
+      "word_ids": [
+        "puha"
+      ],
+      "pos": "adjective",
+      "example_en": "This yarn is very soft.",
+      "example_hu": "Ez a fonal nagyon puha.",
+      "source": "new"
+    },
+    {
+      "id": "meleg",
+      "type": "word",
+      "front_en": "warm",
+      "back_hu": "meleg",
+      "word_ids": [
+        "meleg"
+      ],
+      "pos": "adjective",
+      "example_en": "Wool socks are warm.",
+      "example_hu": "A gyapjú zokni meleg.",
+      "source": "new"
+    },
+    {
+      "id": "minta",
+      "type": "word",
+      "front_en": "pattern [instructions]",
+      "back_hu": "minta",
+      "word_ids": [
+        "minta"
+      ],
+      "pos": "noun",
+      "example_en": "I follow the written pattern.",
+      "example_hu": "Követem a leírt mintát.",
+      "source": "new"
+    },
+    {
+      "id": "sima",
+      "type": "word",
+      "front_en": "knit [stitch]",
+      "back_hu": "sima",
+      "word_ids": [
+        "sima"
+      ],
+      "pos": "adjective",
+      "example_en": "Two knit and two purl stitches.",
+      "example_hu": "Két sima és két fordított szem.",
+      "source": "new"
+    },
+    {
+      "id": "fordított",
+      "type": "word",
+      "front_en": "purl [stitch]",
+      "back_hu": "fordított",
+      "word_ids": [
+        "fordított"
+      ],
+      "pos": "adjective",
+      "example_en": "Now you have to knit a purl stitch.",
+      "example_hu": "Most fordított szemet kell kötni.",
+      "source": "new"
+    },
+    {
+      "id": "takaró",
+      "type": "word",
+      "front_en": "blanket",
+      "back_hu": "takaró",
+      "word_ids": [
+        "takaró"
+      ],
+      "pos": "noun",
+      "example_en": "I am knitting a large blanket.",
+      "example_hu": "Kötök egy nagy takarót.",
+      "source": "new"
+    },
+    {
+      "id": "kesztyű",
+      "type": "word",
+      "front_en": "glove",
+      "back_hu": "kesztyű",
+      "word_ids": [
+        "kesztyű"
+      ],
+      "pos": "noun",
+      "example_en": "I wear knitted gloves in winter.",
+      "example_hu": "Kötött kesztyűt hordok télen.",
+      "source": "new"
+    },
+    {
+      "id": "gombolyít",
+      "type": "word",
+      "front_en": "to wind [yarn]",
+      "back_hu": "gombolyít",
+      "word_ids": [
+        "gombolyít"
+      ],
+      "pos": "verb",
+      "example_en": "Will you help me wind the yarn?",
+      "example_hu": "Segítesz gombolyítani a fonalat?",
+      "source": "new"
+    },
+    {
+      "id": "horgol",
+      "type": "word",
+      "front_en": "to crochet",
+      "back_hu": "horgol",
+      "word_ids": [
+        "horgol"
+      ],
+      "pos": "verb",
+      "example_en": "My aunt crochets a lot.",
+      "example_hu": "A nagynéném sokat horgol.",
+      "source": "new"
+    },
+    {
+      "id": "gombolás",
+      "type": "word",
+      "front_en": "button closure",
+      "back_hu": "gombolás",
+      "word_ids": [
+        "gombolás"
+      ],
+      "pos": "noun",
+      "example_en": "This cardigan has a button closure in the front.",
+      "example_hu": "Ez a kardigán elöl gombolásos.",
+      "source": "new"
+    },
+    {
+      "id": "fonalbolt",
+      "type": "word",
+      "front_en": "yarn shop",
+      "back_hu": "fonalbolt",
+      "word_ids": [
+        "fonalbolt"
+      ],
+      "pos": "noun",
+      "example_en": "I am going to the yarn shop.",
+      "example_hu": "Elmegyek a fonalboltba.",
       "source": "new"
     },
     {
       "id": "fut",
       "type": "word",
-      "front_en": "runs",
+      "front_en": "to run",
       "back_hu": "fut",
       "word_ids": [
         "fut"
       ],
       "pos": "verb",
-      "example_en": "The boy runs fast.",
-      "example_hu": "A fiú gyorsan fut.",
+      "example_en": "I run in the park every morning.",
+      "example_hu": "Minden reggel futok a parkban.",
       "source": "new"
     },
     {
-      "id": "futócipő",
+      "id": "cipő",
       "type": "word",
-      "front_en": "running shoe",
-      "back_hu": "futócipő",
+      "front_en": "shoes",
+      "back_hu": "cipő",
       "word_ids": [
-        "futócipő"
+        "cipő"
       ],
       "pos": "noun",
-      "example_en": "The new running shoe is very comfortable.",
-      "example_hu": "Az új futócipő nagyon kényelmes.",
+      "example_en": "I bought new running shoes.",
+      "example_hu": "Új futócipőt vettem.",
+      "source": "new"
+    },
+    {
+      "id": "pálya",
+      "type": "word",
+      "front_en": "track [running]",
+      "back_hu": "pálya",
+      "word_ids": [
+        "pálya"
+      ],
+      "pos": "noun",
+      "example_en": "The running track is in the stadium.",
+      "example_hu": "A futópálya a stadionban van.",
+      "source": "new"
+    },
+    {
+      "id": "maraton",
+      "type": "word",
+      "front_en": "marathon",
+      "back_hu": "maraton",
+      "word_ids": [
+        "maraton"
+      ],
+      "pos": "noun",
+      "example_en": "Next year I will run the marathon.",
+      "example_hu": "Jövőre lefutom a maratont.",
+      "source": "new"
+    },
+    {
+      "id": "sebesség",
+      "type": "word",
+      "front_en": "speed",
+      "back_hu": "sebesség",
+      "word_ids": [
+        "sebesség"
+      ],
+      "pos": "noun",
+      "example_en": "I need to increase my speed.",
+      "example_hu": "Növelnem kell a sebességemet.",
+      "source": "new"
+    },
+    {
+      "id": "lélegzik",
+      "type": "word",
+      "front_en": "to breathe",
+      "back_hu": "lélegzik",
+      "word_ids": [
+        "lélegzik"
+      ],
+      "pos": "verb",
+      "example_en": "It is important to breathe rhythmically.",
+      "example_hu": "Fontos, hogy ritmusra lélegezzünk.",
       "source": "new"
     },
     {
@@ -264,8 +1096,216 @@
         "verseny"
       ],
       "pos": "noun",
-      "example_en": "The running race will be on Sunday.",
-      "example_hu": "Vasárnap lesz a futóverseny.",
+      "example_en": "I signed up for a five-kilometer race.",
+      "example_hu": "Beneveztem egy öt kilométeres versenyre.",
+      "source": "new"
+    },
+    {
+      "id": "park",
+      "type": "word",
+      "front_en": "park",
+      "back_hu": "park",
+      "word_ids": [
+        "park"
+      ],
+      "pos": "noun",
+      "example_en": "Many people run in the park.",
+      "example_hu": "A parkban sokan futnak.",
+      "source": "new"
+    },
+    {
+      "id": "izzadtság",
+      "type": "word",
+      "front_en": "sweat",
+      "back_hu": "izzadtság",
+      "word_ids": [
+        "izzadtság"
+      ],
+      "pos": "noun",
+      "example_en": "Sweat was dripping from him.",
+      "example_hu": "Csöpögött róla az izzadtság.",
+      "source": "new"
+    },
+    {
+      "id": "pulzus",
+      "type": "word",
+      "front_en": "heart rate",
+      "back_hu": "pulzus",
+      "word_ids": [
+        "pulzus"
+      ],
+      "pos": "noun",
+      "example_en": "My heart rate is high during running.",
+      "example_hu": "Futás közben magas a pulzusom.",
+      "source": "new"
+    },
+    {
+      "id": "állóképesség",
+      "type": "word",
+      "front_en": "stamina",
+      "back_hu": "állóképesség",
+      "word_ids": [
+        "állóképesség"
+      ],
+      "pos": "noun",
+      "example_en": "Running improves stamina.",
+      "example_hu": "A futás javítja az állóképességet.",
+      "source": "new"
+    },
+    {
+      "id": "egészség",
+      "type": "word",
+      "front_en": "health",
+      "back_hu": "egészség",
+      "word_ids": [
+        "egészség"
+      ],
+      "pos": "noun",
+      "example_en": "Sport is important for health.",
+      "example_hu": "A sport fontos az egészséghez.",
+      "source": "new"
+    },
+    {
+      "id": "gyors",
+      "type": "word",
+      "front_en": "fast",
+      "back_hu": "gyors",
+      "word_ids": [
+        "gyors"
+      ],
+      "pos": "adjective",
+      "example_en": "This runner is very fast.",
+      "example_hu": "Ez a futó nagyon gyors.",
+      "source": "new"
+    },
+    {
+      "id": "lassú",
+      "type": "word",
+      "front_en": "slow",
+      "back_hu": "lassú",
+      "word_ids": [
+        "lassú"
+      ],
+      "pos": "adjective",
+      "example_en": "Today I am running at a slow pace.",
+      "example_hu": "Ma lassú tempóban futok.",
+      "source": "new"
+    },
+    {
+      "id": "bemelegítés",
+      "type": "word",
+      "front_en": "warm-up",
+      "back_hu": "bemelegítés",
+      "word_ids": [
+        "bemelegítés"
+      ],
+      "pos": "noun",
+      "example_en": "The warm-up prevents injuries.",
+      "example_hu": "A bemelegítés megelőzi a sérüléseket.",
+      "source": "new"
+    },
+    {
+      "id": "nyújt",
+      "type": "word",
+      "front_en": "to stretch",
+      "back_hu": "nyújt",
+      "word_ids": [
+        "nyújt"
+      ],
+      "pos": "verb",
+      "example_en": "I always stretch after running.",
+      "example_hu": "Futás után mindig nyújtok.",
+      "source": "new"
+    },
+    {
+      "id": "kulacs",
+      "type": "word",
+      "front_en": "water bottle",
+      "back_hu": "kulacs",
+      "word_ids": [
+        "kulacs"
+      ],
+      "pos": "noun",
+      "example_en": "I always have a water bottle with me.",
+      "example_hu": "Mindig van nálam kulacs.",
+      "source": "new"
+    },
+    {
+      "id": "stopperóra",
+      "type": "word",
+      "front_en": "stopwatch",
+      "back_hu": "stopperóra",
+      "word_ids": [
+        "stopperóra"
+      ],
+      "pos": "noun",
+      "example_en": "I measure my time with a stopwatch.",
+      "example_hu": "Stopperórával mérem az időmet.",
+      "source": "new"
+    },
+    {
+      "id": "fájdalom",
+      "type": "word",
+      "front_en": "pain",
+      "back_hu": "fájdalom",
+      "word_ids": [
+        "fájdalom"
+      ],
+      "pos": "noun",
+      "example_en": "I feel pain in my knee.",
+      "example_hu": "Fájdalmat érzek a térdemben.",
+      "source": "new"
+    },
+    {
+      "id": "energia",
+      "type": "word",
+      "front_en": "energy",
+      "back_hu": "energia",
+      "word_ids": [
+        "energia"
+      ],
+      "pos": "noun",
+      "example_en": "I have a lot of energy for running today.",
+      "example_hu": "Sok energiám van ma a futáshoz.",
+      "source": "new"
+    },
+    {
+      "id": "cél",
+      "type": "word",
+      "front_en": "goal [finish line]",
+      "back_hu": "cél",
+      "word_ids": [
+        "cél"
+      ],
+      "pos": "noun",
+      "example_en": "I finally crossed the finish line.",
+      "example_hu": "Végre beértem a célba.",
+      "source": "new"
+    },
+    {
+      "id": "izom",
+      "type": "word",
+      "front_en": "muscle",
+      "back_hu": "izom",
+      "word_ids": [
+        "izom"
+      ],
+      "pos": "noun",
+      "example_en": "The next day my muscles ached.",
+      "example_hu": "Másnap fájtak az izmaim.",
+      "source": "new"
+    },
+    {
+      "id": "ösvény",
+      "type": "word",
+      "front_en": "trail [path]",
+      "back_hu": "ösvény",
+      "word_ids": [
+        "ösvény"
+      ],
+      "pos": "noun",
+      "example_en": "I like running on the forest trail.",
+      "example_hu": "Szeretek az erdei ösvényen futni.",
       "source": "new"
     }
   ],
