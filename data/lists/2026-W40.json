@@ -1310,5 +1310,120 @@
     }
   ],
   "audio_url": "https://github.com/EmmaScully/hungarian-vocab/releases/download/week-2026-W40/hungarian-vocab-2026-W40.mp3",
-  "sentences": []
+  "sentences": [
+    {
+      "id": "s1",
+      "type": "sentence",
+      "front_en": "I am trying to observe a beautiful bird among the trees with the binoculars.",
+      "back_hu": "A fák között egy szép madarat próbálok megfigyelni a távcsővel.",
+      "word_ids": [
+        "madár",
+        "megfigyelni",
+        "távcső"
+      ],
+      "source": "new"
+    },
+    {
+      "id": "s2",
+      "type": "sentence",
+      "front_en": "In the thick forest, a narrow trail leads to the lake.",
+      "back_hu": "A sűrű erdőben egy keskeny ösvény vezet a tóhoz.",
+      "word_ids": [
+        "erdő",
+        "ösvény"
+      ],
+      "source": "new"
+    },
+    {
+      "id": "s3",
+      "type": "sentence",
+      "front_en": "Please give me a thin needle and some red thread!",
+      "back_hu": "Kérlek, adj egy vékony tűt és egy kis piros cérnát!",
+      "word_ids": [
+        "tű",
+        "cérna"
+      ],
+      "source": "new"
+    },
+    {
+      "id": "s4",
+      "type": "sentence",
+      "front_en": "This wool sweater is very warm on cold winter days.",
+      "back_hu": "Ez a gyapjú pulóver nagyon meleg a hideg téli napokon.",
+      "word_ids": [
+        "gyapjú",
+        "pulóver",
+        "meleg"
+      ],
+      "source": "new"
+    },
+    {
+      "id": "s5",
+      "type": "sentence",
+      "front_en": "I like to run in the nearby park every morning.",
+      "back_hu": "Minden reggel szeretek futni a közeli parkban.",
+      "word_ids": [
+        "futni",
+        "park"
+      ],
+      "source": "new"
+    },
+    {
+      "id": "s6",
+      "type": "sentence",
+      "front_en": "This shoe is very comfortable, but not too fast.",
+      "back_hu": "Ez a cipő nagyon kényelmes, de nem túl gyors.",
+      "word_ids": [
+        "cipő",
+        "gyors"
+      ],
+      "source": "new"
+    },
+    {
+      "id": "s7",
+      "type": "sentence",
+      "front_en": "The swallows are flying high in the blue sky.",
+      "back_hu": "A fecskék magasan repülnek a kék égen.",
+      "word_ids": [
+        "fecske",
+        "repülni",
+        "ég"
+      ],
+      "source": "new"
+    },
+    {
+      "id": "s8",
+      "type": "sentence",
+      "front_en": "The small scissors do not fit in my coat pocket.",
+      "back_hu": "A kis olló nem fér el a kabátom zsebében.",
+      "word_ids": [
+        "olló",
+        "zseb"
+      ],
+      "source": "new"
+    },
+    {
+      "id": "s9",
+      "type": "sentence",
+      "front_en": "Warm-up helps to maintain health.",
+      "back_hu": "A bemelegítés segít megőrizni az egészséget.",
+      "word_ids": [
+        "bemelegítés",
+        "egészség"
+      ],
+      "source": "new"
+    },
+    {
+      "id": "s10",
+      "type": "sentence",
+      "front_en": "I am going to knit a scarf from this yellow yarn.",
+      "back_hu": "Ebből a sárga fonalból egy sálat fogok kötni.",
+      "word_ids": [
+        "fonal",
+        "sál",
+        "kötni"
+      ],
+      "source": "new"
+    }
+  ]
 }
