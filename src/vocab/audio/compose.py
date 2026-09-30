@@ -1,4 +1,4 @@
-"""Build the weekly practice mp3: English, pause, Hungarian, pause (and optionally slow Hungarian).
+"""Build the weekly practice mp3: English, pause, Hungarian (spoken slowly), pause.
 
 Every clip is normalised to 24 kHz mono WAV, joined with ffmpeg's concat demuxer, then encoded
 to mp3 once, so clips from any TTS provider join cleanly.
@@ -65,9 +65,7 @@ def build_audio(word_list: WordList, tts: TTSProvider, config: AudioConfig, out:
         segments += [speak(f"Hungarian vocabulary, {word_list.id}.", config.voice_en), pause_gap]
         for card in word_list.cards:
             segments += [speak(card.front_en, config.voice_en), pause_en]
-            segments += [speak(card.back_hu, config.voice_hu), pause_hu]
-            if config.repeat_hu_slow:
-                segments += [speak(card.back_hu, config.voice_hu, config.slow_rate), pause_hu]
+            segments += [speak(card.back_hu, config.voice_hu, config.hu_rate), pause_hu]
 
         concat_list = tmp / "concat.txt"
         concat_list.write_text("".join(f"file '{p.as_posix()}'\n" for p in segments))

@@ -26,10 +26,9 @@ effort = "low"               # claude only
 provider = "edge"            # edge (free, no key) | azure (free F0 tier, needs AZURE_SPEECH_KEY/REGION)
 voice_en = "en-GB-SoniaNeural"
 voice_hu = "hu-HU-NoemiNeural"
-pause_after_en = 1.5         # seconds
-pause_after_hu = 3.0
-repeat_hu_slow = true        # say the Hungarian a second time, slower
-slow_rate = "-30%"
+pause_after_en = 2.0         # seconds
+pause_after_hu = 2.0
+hu_rate = "-30%"             # Hungarian speaking speed ("-30%" = slower, "+0%" = normal)
 
 [notify]
 email = true

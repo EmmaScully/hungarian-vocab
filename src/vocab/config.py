@@ -32,10 +32,9 @@ class AudioConfig(BaseModel):
     provider: str = "edge"
     voice_en: str = "en-GB-SoniaNeural"
     voice_hu: str = "hu-HU-NoemiNeural"
-    pause_after_en: float = 1.5
-    pause_after_hu: float = 3.0
-    repeat_hu_slow: bool = True
-    slow_rate: str = "-30%"
+    pause_after_en: float = 2.0
+    pause_after_hu: float = 2.0
+    hu_rate: str = "-30%"
 
 
 class NotifyConfig(BaseModel):

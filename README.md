@@ -4,7 +4,7 @@ A weekly English → Hungarian vocabulary loop:
 
 1. **Monday 06:00 UTC** — GitHub Actions generates a new word list, with an LLM (Gemini by default, Claude optional) filling up to
    half of it from words you failed or marked "needs practice". It builds an mp3 of each
-   word (English, pause, Hungarian, pause) and publishes it as a GitHub Release, then emails
+   word (English, 2s pause, slow Hungarian, 2s pause) and publishes it as a GitHub Release, then emails
    you the list (Telegram is optional).
 2. **During the week** — revise with flashcards on the GitHub Pages site, or listen to the
    audio (direct link, Telegram, or subscribe to the podcast feed).
