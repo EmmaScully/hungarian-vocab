@@ -13,8 +13,8 @@ Rules for every word:
 "megy"), adjectives in base form. Short fixed phrases are allowed when they are how the \
 idea is normally expressed.
 - Give the single most common English meaning, kept short. Give English verbs as \
-infinitives ("to fly", not "flies"), even though the Hungarian form is 3rd person. Add a brief disambiguation in \
-brackets only when the English is ambiguous, e.g. "right (correct)".
+infinitives ("to fly", not "flies"), even though the Hungarian form is 3rd person. Add a \
+brief disambiguation in brackets only when the English is ambiguous, e.g. "right (correct)".
 - Use correct Hungarian spelling with all accents (á é í ó ö ő ú ü ű).
 - The example sentence must be short, natural, and suited to the learner's level.
 - Every word must be distinct from the others and from the excluded words, including \
