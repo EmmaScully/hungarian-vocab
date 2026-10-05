@@ -41,6 +41,12 @@ level = "B1–B2"
 short_questions = 4
 long_questions = 2
 
+[schedule]
+# The weekly workflow is normally run by hand after the Monday lesson. Scheduled runs are a
+# fallback: if no list exists for the week by this local time, a default list is generated.
+timezone = "Australia/Melbourne"
+deadline = "21:00"
+
 [notify]
 email = true
 telegram = false           # enable once TELEGRAM_BOT_TOKEN/CHAT_ID secrets exist

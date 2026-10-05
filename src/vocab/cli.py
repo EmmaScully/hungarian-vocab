@@ -1,9 +1,11 @@
 """Command-line entry point: `uv run vocab <command>`."""
 
 import argparse
+import os
 import sys
-from datetime import UTC, datetime
+from datetime import UTC, datetime, time
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 import httpx
 
@@ -31,6 +33,30 @@ def _audio_path(config: Config, list_id: str) -> Path:
     return config.general.build_dir / "audio" / f"hungarian-vocab-{list_id}.mp3"
 
 
+def _lesson(args, config: Config, store: Store, list_id: str | None = None):
+    """Lesson notes for this run: parsed from --lesson-file (once), else loaded if saved."""
+    if hasattr(args, "_lesson"):
+        return args._lesson
+    lesson = None
+    lesson_file = getattr(args, "lesson_file", None)
+    text = Path(lesson_file).read_text(encoding="utf-8").strip() if lesson_file else ""
+    if text:
+        from vocab.lesson import parse_lesson
+        from vocab.llm.base import get_provider
+
+        lesson = parse_lesson(get_provider(config.llm), text)
+        # Counts only: the notes themselves are private and logs are public.
+        print(
+            f"Parsed lesson notes: {len(lesson.vocabulary)} words, {len(lesson.sentences)} "
+            f"sentences, {len(lesson.topics)} topics, {len(lesson.grammar_points)} grammar points"
+        )
+    elif list_id is not None:
+        wstore = _writing_store(config, store, required=False)
+        lesson = wstore.load_lesson(list_id) if wstore else None
+    args._lesson = lesson
+    return lesson
+
+
 def cmd_generate(args, config: Config, store: Store) -> None:
     from vocab.llm.base import get_provider
 
@@ -39,6 +65,8 @@ def cmd_generate(args, config: Config, store: Store) -> None:
     now = datetime.now(UTC)
     n = args.n or config.generator.n_words
     topics = _topics(args.topics, config)
+    lesson = _lesson(args, config, store)
+    all_topics = list(dict.fromkeys(topics + (lesson.topics if lesson else [])))
 
     list_id = iso_week_id(now.date())
     if store.list_path(list_id).exists():
@@ -49,7 +77,7 @@ def cmd_generate(args, config: Config, store: Store) -> None:
         # Forget words that were introduced by the list being replaced.
         for card in store.load_list(list_id).cards:
             entry = bank.words.get(card.id)
-            if card.source == "new" and entry is not None and entry.status == "new":
+            if card.source != "review" and entry is not None and entry.status == "new":
                 del bank.words[card.id]
         index.lists = [e for e in index.lists if e.id != list_id]
 
@@ -57,12 +85,19 @@ def cmd_generate(args, config: Config, store: Store) -> None:
         bank,
         get_provider(config.llm),
         n=n,
-        topics=topics,
+        topics=all_topics,
         review_ratio=config.generator.review_ratio,
         level=config.generator.level,
         now=now,
+        lesson_words=lesson.vocabulary if lesson else None,
     )
     store.save_list(word_list)
+    if lesson is not None:
+        wstore = _writing_store(config, store, required=False)
+        if wstore:
+            wstore.save_lesson(word_list.id, lesson)
+        else:
+            print("::warning::WRITING_PASSWORD not set — parsed lesson notes were not saved")
     store.save_bank(bank)
     index.lists.append(
         ListIndexEntry(
@@ -74,10 +109,13 @@ def cmd_generate(args, config: Config, store: Store) -> None:
     )
     store.save_index(index)
 
-    n_review = sum(c.source == "review" for c in word_list.cards)
-    print(f"Created {word_list.id}: {len(word_list.cards)} cards ({n_review} review)")
+    count = {s: sum(c.source == s for c in word_list.cards) for s in ("lesson", "review", "new")}
+    print(
+        f"Created {word_list.id}: {len(word_list.cards)} cards "
+        f"({count['lesson']} from the lesson, {count['review']} review, {count['new']} new)"
+    )
     for card in word_list.cards:
-        tag = " (review)" if card.source == "review" else ""
+        tag = f" ({card.source})" if card.source != "new" else ""
         print(f"  {card.front_en} — {card.back_hu}{tag}")
 
 
@@ -169,12 +207,18 @@ def cmd_apply_results(args, config: Config, store: Store) -> None:
 
 def cmd_sentences(args, config: Config, store: Store) -> None:
     from vocab.llm.base import get_provider
+    from vocab.models import GeneratedSentence
     from vocab.sentences import generate_sentences
 
     list_id = _resolve_list_id(store, args.list_id)
     word_list = store.load_list(list_id)
+    lesson = _lesson(args, config, store, list_id)
+    lesson_sentences = [
+        GeneratedSentence(en=s.en, hu=s.hu, words_used=[])
+        for s in (lesson.sentences if lesson else [])
+    ]
     word_list.sentences = generate_sentences(
-        get_provider(config.llm), word_list, config.sentences.n
+        get_provider(config.llm), word_list, config.sentences.n, lesson=lesson_sentences
     )
     store.save_list(word_list)
     print(f"Added {len(word_list.sentences)} test sentences to {list_id}")
@@ -182,12 +226,14 @@ def cmd_sentences(args, config: Config, store: Store) -> None:
         print(f"  {card.front_en} — {card.back_hu}")
 
 
-def _writing_store(config: Config, store: Store):
+def _writing_store(config: Config, store: Store, required: bool = True):
     from vocab import crypto
     from vocab.writing import WritingStore
 
     password = crypto.password_from_env()
     if password is None:
+        if not required:
+            return None
         sys.exit(f"{crypto.PASSWORD_ENV} is not set (the WRITING_TAB secret).")
     return WritingStore(store.root, password)
 
@@ -208,6 +254,7 @@ def cmd_writing(args, config: Config, store: Store) -> None:
         level=config.writing.level,
         n_short=config.writing.short_questions,
         n_long=config.writing.long_questions,
+        lesson=_lesson(args, config, store, list_id),
     )
     wstore.save_exercise(exercise)
     if (entry := index.get(list_id)) is not None:
@@ -276,8 +323,36 @@ def _optional_step(name: str, func, args, config: Config, store: Store) -> None:
         print(f"::warning::{name} failed: {e}")
 
 
+def _set_output(name: str, value: str) -> None:
+    """Expose a step output to later GitHub Actions jobs (no-op outside Actions)."""
+    path = os.environ.get("GITHUB_OUTPUT")
+    if path:
+        with open(path, "a", encoding="utf-8") as f:
+            f.write(f"{name}={value}\n")
+
+
+def scheduled_run_due(now_local: datetime, deadline: time) -> bool:
+    """Scheduled runs are a fallback: on Monday they wait until the local deadline."""
+    return not (now_local.weekday() == 0 and now_local.time() < deadline)
+
+
 def cmd_weekly(args, config: Config, store: Store) -> None:
     """Monday pipeline minus notifications (those run after the Pages deploy in CI)."""
+    _set_output("generated", "false")
+    list_id = iso_week_id(datetime.now(UTC).date())
+    if args.scheduled:
+        tz = ZoneInfo(config.schedule.timezone)
+        now_local = datetime.now(tz)
+        if store.list_path(list_id).exists():
+            print(f"Scheduled run: {list_id} was already generated — nothing to do.")
+            return
+        if not scheduled_run_due(now_local, config.schedule.deadline):
+            print(
+                f"Scheduled run: it's {now_local:%a %H:%M} in {config.schedule.timezone}, "
+                f"before the {config.schedule.deadline:%H:%M} deadline — waiting for a later run."
+            )
+            return
+        print(f"Scheduled run: no list for {list_id} by the deadline — generating the default.")
     cmd_apply_results(args, config, store)
     cmd_generate(args, config, store)
     _optional_step("Test sentences", cmd_sentences, args, config, store)
@@ -288,6 +363,7 @@ def cmd_weekly(args, config: Config, store: Store) -> None:
     else:
         cmd_release(args, config, store)
     cmd_feed(args, config, store)
+    _set_output("generated", "true")
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -304,6 +380,7 @@ def build_parser() -> argparse.ArgumentParser:
         p.add_argument("--n", type=int, help="number of words (default: config)")
         p.add_argument("--topics", help="comma-separated topics; empty string = none")
         p.add_argument("--force", action="store_true", help="replace this week's list")
+        p.add_argument("--lesson-file", help="text file with notes pasted from the lesson chat")
 
     generate_args(add("generate", cmd_generate, "generate this week's word list"))
     for name, func, help in [
@@ -329,6 +406,10 @@ def build_parser() -> argparse.ArgumentParser:
     generate_args(weekly)
     weekly.add_argument("--list-id", default=None, help=argparse.SUPPRESS)
     weekly.add_argument("--skip-release", action="store_true")
+    weekly.add_argument(
+        "--scheduled", action="store_true",
+        help="fallback mode: skip if this week's list exists or it's before the deadline",
+    )
     return parser
 
 

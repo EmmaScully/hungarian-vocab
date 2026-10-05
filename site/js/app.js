@@ -81,7 +81,7 @@ function renderWordTable() {
         "tr",
         {},
         el("td", {}, c.front_en),
-        el("td", {}, el("b", {}, c.back_hu), " ", c.source === "review" ? el("span", { class: "tag" }, "review") : ""),
+        el("td", {}, el("b", {}, c.back_hu), " ", c.source !== "new" ? el("span", { class: "tag" }, c.source) : ""),
         el("td", { class: "ex" }, c.example_hu || "", c.example_en ? el("br") : "", el("i", {}, c.example_en || "")),
       ),
     ),

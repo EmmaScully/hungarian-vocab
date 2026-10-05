@@ -47,7 +47,7 @@ class Card(BaseModel):
     pos: str | None = None
     example_en: str | None = None
     example_hu: str | None = None
-    source: Literal["new", "review"] = "new"
+    source: Literal["new", "review", "lesson"] = "new"
 
 
 class WordList(BaseModel):

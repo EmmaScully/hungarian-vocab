@@ -1,6 +1,7 @@
 """Load config.toml into typed settings."""
 
 import tomllib
+from datetime import time
 from pathlib import Path
 
 from pydantic import BaseModel
@@ -47,6 +48,12 @@ class WritingConfig(BaseModel):
     long_questions: int = 2
 
 
+class ScheduleConfig(BaseModel):
+    # Scheduled runs only generate a default list if none was made by hand by this local time.
+    timezone: str = "Australia/Melbourne"
+    deadline: time = time(21, 0)
+
+
 class NotifyConfig(BaseModel):
     email: bool = True
     telegram: bool = False
@@ -59,6 +66,7 @@ class Config(BaseModel):
     audio: AudioConfig = AudioConfig()
     sentences: SentencesConfig = SentencesConfig()
     writing: WritingConfig = WritingConfig()
+    schedule: ScheduleConfig = ScheduleConfig()
     notify: NotifyConfig = NotifyConfig()
 
 

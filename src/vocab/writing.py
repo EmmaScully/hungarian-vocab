@@ -11,13 +11,16 @@ import json
 from datetime import UTC, datetime
 from html import escape
 from pathlib import Path
-from typing import Literal
+from typing import TYPE_CHECKING, Literal
 
 from pydantic import BaseModel, Field
 
 from vocab import crypto
 from vocab.llm.base import LLMProvider
 from vocab.models import ListIndex, WordList
+
+if TYPE_CHECKING:
+    from vocab.lesson import LessonNotes
 
 # ---------- exercise ----------
 
@@ -78,7 +81,12 @@ e.g. a message or note) and one longer task (120–200 words, e.g. an opinion, s
 letter), both related to the passage theme."""
 
 
-def exercise_prompt(current: WordList | None, index: ListIndex, recent_themes: list[str]) -> str:
+def exercise_prompt(
+    current: WordList | None,
+    index: ListIndex,
+    recent_themes: list[str],
+    lesson: "LessonNotes | None" = None,
+) -> str:
     topics = sorted({t for e in index.lists for t in e.topics})
     lines = []
     if current is not None:
@@ -87,6 +95,16 @@ def exercise_prompt(current: WordList | None, index: ListIndex, recent_themes: l
     lines.append(f"Topics of the learner's word lists so far: {', '.join(topics) or '(none)'}")
     avoid = ", ".join(recent_themes) or "(none)"
     lines.append(f"Recent passage themes to avoid repeating: {avoid}")
+    if lesson is not None:
+        lines.append(
+            "This week's tutoring lesson covered: " + ", ".join(lesson.topics)
+            + ". Prefer a theme connected to the lesson."
+        )
+        if lesson.grammar_points:
+            lines.append(
+                "Grammar from the lesson to use in the passage and practise in the writing "
+                "tasks: " + "; ".join(lesson.grammar_points)
+            )
     return "\n".join(lines)
 
 
@@ -97,12 +115,13 @@ def generate_exercise(
     index: ListIndex,
     recent_themes: list[str],
     level: str = "B1–B2",
+    lesson: "LessonNotes | None" = None,
     n_short: int = 4,
     n_long: int = 2,
 ) -> WritingExercise:
     system = EXERCISE_SYSTEM.format(level=level, n_short=n_short, n_long=n_long)
     generated = llm.generate_structured(
-        system, exercise_prompt(current, index, recent_themes), GeneratedExercise
+        system, exercise_prompt(current, index, recent_themes, lesson), GeneratedExercise
     )
     return WritingExercise(
         **generated.model_dump(), week_id=week_id, created=datetime.now(UTC), level=level
@@ -228,6 +247,18 @@ class WritingStore:
 
     def load_submission(self, week_id: str) -> Submission:
         return Submission.model_validate(self._read(self.submission_path(week_id)))
+
+    def lesson_path(self, week_id: str) -> Path:
+        return self.root.parent / "lessons" / f"{week_id}.enc.json"
+
+    def save_lesson(self, week_id: str, lesson: "LessonNotes") -> None:
+        self._write(self.lesson_path(week_id), lesson)
+
+    def load_lesson(self, week_id: str) -> "LessonNotes | None":
+        from vocab.lesson import LessonNotes
+
+        path = self.lesson_path(week_id)
+        return LessonNotes.model_validate(self._read(path)) if path.exists() else None
 
     def save_feedback(self, feedback: GradedFeedback) -> None:
         self._write(self.feedback_path(feedback.week_id), feedback)

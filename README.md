@@ -2,10 +2,17 @@
 
 A weekly English → Hungarian vocabulary loop:
 
-1. **Monday 06:00 UTC** — GitHub Actions generates a new word list, with an LLM (Gemini by default, Claude optional) filling up to
-   half of it from words you failed or marked "needs practice". It builds an mp3 of each
-   word (English, 2s pause, slow Hungarian, 2s pause) and publishes it as a GitHub Release, then emails
-   you the list (Telegram is optional).
+1. **Monday evening, after the lesson**: run Actions → **Weekly word list** → Run workflow.
+   Paste the tutor's chat into **lesson_notes**, as-is (timestamps, names and "img" are
+   cleaned out), and/or add comma-separated **topics**. Gemini sorts the notes into:
+   - **Vocabulary:** goes into the list, with verbs in the infinitive.
+   - **Corrected sentences:** become test sentences.
+   - **Topics:** steer the new words.
+   - **Topics and grammar points:** shape the reading & writing exercise.
+
+   The run then builds the mp3, publishes the site and emails you.
+   **Fallback:** if nothing has been run by **21:00 Monday, Melbourne time**, a scheduled run
+   generates a default list. Times are set in `[schedule]` in `config.toml`.
 2. **During the week** — revise with flashcards on the GitHub Pages site, or listen to the
    audio (direct link, Telegram, or subscribe to the podcast feed).
 3. **Any time in the week** — do the **reading & writing** exercise in the password-protected
@@ -73,7 +80,7 @@ Other commands:
 - `vocab apply-results`: fold `data/results/*` into the bank.
 - `vocab release`: upload the mp3.
 - `vocab notify`: send the email and Telegram message.
-- `vocab weekly`: everything except notify.
+- `vocab weekly [--lesson-file notes.txt]`: everything except notify.
 - `vocab sentences`, `vocab writing`: add test sentences or the reading & writing exercise to a week.
 - `vocab grade-writing`, `vocab email-feedback`: mark a submission, or re-send its feedback.
 
@@ -101,6 +108,26 @@ Within each group, words with more lapses come first. The rest of the list is ne
 the LLM. Every word already in the bank is excluded, so mastered words never come back.
 
 **If you skip a test,** that week's words stay "untested" and are carried into the next list.
+
+## Lesson notes
+
+`lesson_notes` takes the chat exactly as copied. GitHub's form is a single-line box, so line
+breaks get lost when pasting. That's fine: `vocab/lesson.py` strips the "img / Timea H. /
+18:34" chat metadata and uses it to split the notes back into lines.
+
+- **Lesson words** always go into the list. Mastered words are still skipped. The list can
+  be longer than `n_words`, because review words are still added; new words then fill any
+  space left.
+- **Lesson sentences** go first in the test sentences.
+- **Saved encrypted:** the parsed notes go to `data/lessons/<week>.enc.json`, encrypted with
+  the `WRITING_TAB` password. The Maintenance workflow can then reuse them.
+- **Kept out of the log:** the notes are read from the event payload, so they never appear
+  in the public log.
+
+**Privacy:** the word list and test sentences are public files, like every list. If they
+contain lesson sentences, those sentences are public too.
+
+Locally: `uv run vocab weekly --lesson-file notes.txt`.
 
 ## Test sentences
 

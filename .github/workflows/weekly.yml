@@ -1,10 +1,20 @@
 name: Weekly word list
 
+# Normally run by hand after the Monday lesson (Actions -> Weekly word list -> Run workflow),
+# pasting the lesson chat into "lesson_notes". The schedule is only a fallback: if no list
+# exists for the week by 21:00 Monday Melbourne time, a default list is generated.
+# GitHub cron is UTC-only and can delay or drop runs, so there are three triggers; each run
+# checks the Melbourne time and does nothing if the list already exists or it's too early.
 on:
   schedule:
-    - cron: "0 6 * * 1" # Mondays 06:00 UTC
+    - cron: "7 10 * * 1" # 21:07 Melbourne during daylight saving (AEDT, Oct-Apr)
+    - cron: "7 11 * * 1" # 21:07 Melbourne in winter (AEST, Apr-Oct)
+    - cron: "37 12 * * 1" # backup in case GitHub drops one of the above
   workflow_dispatch:
     inputs:
+      lesson_notes:
+        description: "Lesson notes: paste the tutor chat as-is (optional)"
+        required: false
       n:
         description: "Number of words (blank = config default)"
         required: false
@@ -26,6 +36,8 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      generated: ${{ steps.weekly.outputs.generated }}
     steps:
       - uses: actions/checkout@v5
       - uses: astral-sh/setup-uv@v6
@@ -33,6 +45,7 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y --no-install-recommends ffmpeg
       - run: uv sync --locked
       - name: Generate list, audio, release and feed
+        id: weekly
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API }}
           WRITING_PASSWORD: ${{ secrets.WRITING_TAB }}
@@ -43,8 +56,17 @@ jobs:
           N: ${{ inputs.n }}
           TOPICS: ${{ inputs.topics }}
           FORCE: ${{ inputs.force }}
+          EVENT: ${{ github.event_name }}
         run: |
+          # Read the lesson notes from the event payload rather than an env var, so they
+          # aren't echoed into the (public) log.
+          mkdir -p build
+          jq -r '.inputs.lesson_notes // ""' "$GITHUB_EVENT_PATH" > build/lesson.txt
           args=()
+          if [ -s build/lesson.txt ] && [ -n "$(tr -d '[:space:]' < build/lesson.txt)" ]; then
+            args+=(--lesson-file build/lesson.txt)
+          fi
+          if [ "$EVENT" = "schedule" ]; then args+=(--scheduled); fi
           if [ -n "$N" ]; then args+=(--n "$N"); fi
           if [ -n "$TOPICS" ]; then args+=(--topics "$TOPICS"); fi
           if [ "$FORCE" = "true" ]; then args+=(--force); fi
@@ -61,6 +83,7 @@ jobs:
 
   deploy:
     needs: build
+    if: ${{ needs.build.outputs.generated == 'true' }}
     uses: ./.github/workflows/deploy-pages.yml
     permissions:
       contents: read
@@ -68,7 +91,8 @@ jobs:
       id-token: write
 
   notify:
-    needs: deploy
+    needs: [build, deploy]
+    if: ${{ needs.build.outputs.generated == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5

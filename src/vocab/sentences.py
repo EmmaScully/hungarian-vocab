@@ -31,14 +31,21 @@ def sentence_prompt(word_list: WordList, n: int) -> str:
     )
 
 
-def generate_sentences(llm: LLMProvider, word_list: WordList, n: int) -> list[Card]:
-    if n <= 0 or not word_list.cards:
-        return []
-    batch = llm.generate_structured(SENTENCE_SYSTEM, sentence_prompt(word_list, n), SentenceBatch)
+def generate_sentences(
+    llm: LLMProvider, word_list: WordList, n: int, lesson: list[GeneratedSentence] = ()
+) -> list[Card]:
+    """Lesson sentences (all of them) first, then generated sentences to fill up to n."""
     known = {c.id for c in word_list.cards}
     cards: list[Card] = []
     seen: set[str] = set()
-    for sentence in batch.sentences:
+    need = n - len(lesson)
+    generated = []
+    if need > 0 and word_list.cards:
+        prompt = sentence_prompt(word_list, need)
+        generated = llm.generate_structured(SENTENCE_SYSTEM, prompt, SentenceBatch).sentences
+    limit = len(lesson) + max(need, 0)
+    tagged = [(s, "lesson") for s in lesson] + [(s, "new") for s in generated]
+    for sentence, source in tagged:
         en, hu = sentence.en.strip(), sentence.hu.strip()
         if not en or not hu or hu.lower() in seen:
             continue
@@ -50,9 +57,9 @@ def generate_sentences(llm: LLMProvider, word_list: WordList, n: int) -> list[Ca
                 front_en=en,
                 back_hu=hu,
                 word_ids=[w for w in map(word_id, sentence.words_used) if w in known],
-                source="new",
+                source=source,
             )
         )
-        if len(cards) == n:
+        if len(cards) == limit:
             break
     return cards
