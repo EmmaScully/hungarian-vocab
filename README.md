@@ -23,6 +23,24 @@ A weekly English → Hungarian vocabulary loop:
    - **Mastered** words never come back.
    - **Fail** and **needs practice** words come back in the next list.
 
+## Privacy: everything is encrypted
+
+The repo and site are public, but all data is **encrypted** with the `WRITING_TAB` password:
+word lists, the word bank, test results, lesson notes, and the reading & writing material.
+- **How:** files are committed as AES-256-GCM `*.enc.json` envelopes, with the key derived by
+  PBKDF2-SHA256 (600k iterations). `data/crypto.json` holds the shared salt, which is public
+  by design.
+- **On the site:** it asks for the password once, and you can tick "Remember on this device".
+  Everything is decrypted in the browser. Settings → "Lock this device" forgets the password.
+- **What stays public, on purpose:**
+  - the weekly mp3s (GitHub Release assets) and the podcast feed, which contain no text, only
+    the audio;
+  - week ids, and the shape of the files.
+- **What to watch:**
+  - Actions logs are public, so the pipeline prints counts, never words or sentences.
+  - Anyone can download the ciphertext, so its safety depends on the password. Use a long,
+    unique one.
+
 ## Layout
 
 | Path | What |
@@ -33,10 +51,11 @@ A weekly English → Hungarian vocabulary loop:
 | `src/vocab/publish/` | GitHub Release upload, podcast RSS |
 | `src/vocab/notify/` | Email (SMTP) and Telegram |
 | `site/` | Static flashcard app and progress dashboard (no build step) |
-| `data/bank.json` | Word bank: status, ease, lapses and history of every word |
-| `data/lists/` | Weekly lists + `index.json` |
+| `data/bank.enc.json` | Word bank: status, ease, lapses and history of every word |
+| `data/lists/` | Weekly lists + `index.enc.json` |
 | `data/results/` | Test results written by the site |
-| `data/writing/` | Reading & writing exercises, submissions and feedback — **encrypted** |
+| `data/writing/`, `data/lessons/` | Reading & writing exercises, submissions, feedback, lesson notes |
+| `data/crypto.json` | Public salt for the encryption (not secret) |
 | `config.toml` | Word count, review ratio, topics, model, voices, pauses |
 
 ## Setup

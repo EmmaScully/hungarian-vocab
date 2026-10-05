@@ -1,4 +1,4 @@
-import { loadIndex, loadList, storage } from "./data.js";
+import { encryptForCommit, loadIndex, loadList, lock, savedPassword, storage, unlock } from "./data.js";
 import { getSettings, putFile, saveSettings, testConnection } from "./github.js";
 import { Session } from "./srs.js";
 import { renderDashboard } from "./dashboard.js";
@@ -19,6 +19,7 @@ const state = {
 
 // ---------- routing ----------
 function route() {
+  if (document.body.classList.contains("locked")) return;
   const name = (location.hash || "#study").slice(1);
   const view = ["study", "writing", "dashboard", "settings"].includes(name) ? name : "study";
   $$(".view").forEach((v) => (v.hidden = v.id !== `view-${view}`));
@@ -201,10 +202,11 @@ async function submitTest() {
   status.className = "small";
   status.textContent = "Submitting…";
   try {
+    // Encrypted, and no score in the commit message: the repo is public.
     await putFile(
-      `data/results/${state.list.id}-test.json`,
-      JSON.stringify(result, null, 2) + "\n",
-      `Test results for ${state.list.id} (${result.score}%)`,
+      `data/results/${state.list.id}-test.enc.json`,
+      await encryptForCommit(result),
+      `Test results for ${state.list.id}`,
     );
     storage.set(`submitted:${state.list.id}`, true);
     status.className = "small ok";
@@ -287,13 +289,59 @@ function bindSettings() {
   });
 }
 
+// ---------- lock ----------
+function bindLock() {
+  const form = $("#unlock-form");
+  const status = $("#unlock-status");
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    status.className = "small";
+    status.textContent = "Unlocking…";
+    try {
+      await unlock(form.pw.value, form.remember.checked);
+      form.pw.value = "";
+      status.textContent = "";
+      await start();
+    } catch (err) {
+      status.className = "small err";
+      status.textContent = err.name === "OperationError" ? "Wrong password." : `Could not unlock: ${err.message}`;
+    }
+  });
+  $("#btn-lock").addEventListener("click", () => {
+    lock();
+    location.hash = "";
+    location.reload();
+  });
+}
+
+function showLock() {
+  document.body.classList.add("locked");
+  $$(".view").forEach((v) => (v.hidden = v.id !== "view-lock"));
+}
+
 // ---------- boot ----------
 async function init() {
+  bindLock();
   bindStudy();
   bindSettings();
   initWriting();
   window.addEventListener("hashchange", route);
 
+  const saved = savedPassword();
+  if (saved) {
+    try {
+      await unlock(saved);
+      return start();
+    } catch {
+      lock(); // stale saved password
+    }
+  }
+  showLock();
+}
+
+async function start() {
+  document.body.classList.remove("locked");
+  $("#view-lock").hidden = true;
   state.index = await loadIndex();
   const lists = state.index.lists;
   const select = $("#list-select");

@@ -102,6 +102,7 @@ jobs:
       - run: uv sync --locked
       - name: Send notifications
         env:
+          WRITING_PASSWORD: ${{ secrets.WRITING_TAB }}
           SMTP_USER: ${{ secrets.EMAIL }}
           SMTP_APP_PASSWORD: ${{ secrets.APP_PW }}
           EMAIL_TO: ${{ secrets.EMAIL }}

@@ -10,7 +10,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js" defer></script>
   <script type="module" src="js/app.js"></script>
 </head>
-<body>
+<body class="locked">
   <header class="topbar">
     <span class="brand">🇭🇺 <span class="brand-name">Magyar</span></span>
     <nav>
@@ -22,6 +22,18 @@
   </header>
 
   <main>
+    <!-- UNLOCK: all data is encrypted with the site password -->
+    <section id="view-lock" class="view">
+      <form id="unlock-form" class="panel form lock-panel">
+        <h1>🇭🇺 Magyar</h1>
+        <p class="muted">Enter the password to open your flashcards, writing and progress.</p>
+        <label>Password <input type="password" name="pw" autocomplete="current-password" required></label>
+        <label class="check"><input type="checkbox" name="remember"> Remember on this device</label>
+        <button type="submit" class="btn primary">Unlock</button>
+        <p id="unlock-status" class="small"></p>
+      </form>
+    </section>
+
     <!-- STUDY -->
     <section id="view-study" class="view" hidden>
       <div class="toolbar">
@@ -92,21 +104,10 @@
 
     <!-- READING & WRITING (password protected, content encrypted) -->
     <section id="view-writing" class="view" hidden>
-      <div id="writing-locked" class="panel form">
-        <h1>Reading &amp; writing</h1>
-        <p class="muted">This week's passage, questions and writing tasks are encrypted. Enter the
-          password to open them.</p>
-        <form id="unlock-form">
-          <label>Password <input type="password" name="pw" autocomplete="current-password" required></label>
-          <button type="submit" class="btn primary">Unlock</button>
-          <p id="unlock-status" class="small"></p>
-        </form>
-      </div>
-      <div id="writing-unlocked" hidden>
+      <div id="writing-unlocked">
         <div class="toolbar">
           <label>Week <select id="writing-week"></select></label>
           <label class="check"><input type="checkbox" id="show-en"> Show English</label>
-          <button type="button" id="btn-lock" class="link">Lock</button>
         </div>
         <div id="writing-status" class="banner" hidden></div>
         <section id="feedback" hidden></section>
@@ -162,6 +163,12 @@
         </div>
         <p id="settings-status" class="small"></p>
       </form>
+      <div class="panel">
+        <h2>Password</h2>
+        <p class="muted">Everything on this site is encrypted with your password. Lock to forget
+          it on this device.</p>
+        <button type="button" id="btn-lock" class="btn">Lock this device</button>
+      </div>
     </section>
   </main>
 </body>

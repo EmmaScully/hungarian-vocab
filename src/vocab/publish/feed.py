@@ -15,11 +15,10 @@ def build_feed(index: ListIndex, site_url: str) -> str:
     for entry in sorted(index.lists, key=lambda e: e.created, reverse=True):
         if not entry.audio_url:
             continue
-        topics = f" — {', '.join(entry.topics)}" if entry.topics else ""
         duration = f"<itunes:duration>{int(entry.audio_duration_s or 0)}</itunes:duration>"
         items.append(
             "    <item>\n"
-            f"      <title>{escape(entry.id)}{escape(topics)}</title>\n"
+            f"      <title>Hungarian vocabulary {escape(entry.id)}</title>\n"
             f"      <description>{entry.n_cards} words: English, then Hungarian."
             "</description>\n"
             f"      <guid isPermaLink=\"false\">hungarian-vocab-{escape(entry.id)}</guid>\n"

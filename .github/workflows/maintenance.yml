@@ -8,6 +8,7 @@ on:
         description: "What to do"
         type: choice
         options:
+          - encrypt-data
           - add-sentences-and-writing
           - add-sentences
           - create-writing
@@ -64,6 +65,7 @@ jobs:
               uv run vocab release "${args[@]}"
               uv run vocab feed ;;
             grade-writing) uv run vocab grade-writing "${args[@]}" ;;
+            encrypt-data) uv run vocab encrypt-data ;;
             resend-writing-feedback) uv run vocab email-feedback "${args[@]}" ;;
           esac
       - name: Commit data

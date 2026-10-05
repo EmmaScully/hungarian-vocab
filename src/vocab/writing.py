@@ -219,6 +219,7 @@ def grade(llm: LLMProvider, exercise: WritingExercise, submission: Submission) -
 
 class WritingStore:
     def __init__(self, data_dir: Path, password: str):
+        self.data_dir = data_dir
         self.root = data_dir / "writing"
         self.password = password
 
@@ -233,7 +234,8 @@ class WritingStore:
 
     def _write(self, path: Path, model: BaseModel) -> None:
         path.parent.mkdir(parents=True, exist_ok=True)
-        envelope = crypto.encrypt_json(model.model_dump(mode="json"), self.password)
+        salt = crypto.load_or_create_salt(self.data_dir)
+        envelope = crypto.encrypt_json(model.model_dump(mode="json"), self.password, salt)
         path.write_text(json.dumps(envelope) + "\n", encoding="utf-8")
 
     def _read(self, path: Path) -> dict:

@@ -222,3 +222,9 @@ td.right { color: var(--mastered); }
   .panel, .tile { border-color: #ccc; box-shadow: none; break-inside: avoid; }
   main { max-width: none; padding: 0; }
 }
+
+/* site lock */
+body.locked .topbar nav { visibility: hidden; }
+.lock-panel { max-width: 420px; margin: 48px auto; }
+.lock-panel h1 { margin-bottom: 4px; }
+.form label.check { flex-direction: row; align-items: center; gap: 8px; }

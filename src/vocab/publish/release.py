@@ -36,6 +36,17 @@ class GitHubReleases:
         r.raise_for_status()
         return r.json()
 
+    def set_body(self, tag: str, body: str) -> bool:
+        """Replace a release's notes. Returns False if the release doesn't exist."""
+        r = self.client.get(f"{API}/repos/{self.repo}/releases/tags/{tag}")
+        if r.status_code == 404:
+            return False
+        r.raise_for_status()
+        release_id = r.json()["id"]
+        r = self.client.patch(f"{API}/repos/{self.repo}/releases/{release_id}", json={"body": body})
+        r.raise_for_status()
+        return True
+
     def upload(self, tag: str, name: str, body: str, file: Path) -> str:
         """Create (or reuse) the release and upload `file`, replacing any same-named asset.
 

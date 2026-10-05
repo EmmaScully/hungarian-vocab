@@ -1,20 +1,11 @@
-// Password-protected weekly reading & writing exercise.
-// Everything for this tab is stored encrypted (see crypto.js); the password never leaves the
-// browser and is kept only in sessionStorage for the current tab.
-import { fetchJSON, storage } from "./data.js";
-import { decryptJSON, encryptJSON } from "./crypto.js";
+// Weekly reading & writing exercise. Like all site data it's encrypted (see data.js); the
+// site-wide unlock screen provides the password.
+import { encryptForCommit, fetchEncrypted, storage } from "./data.js";
 import { putFile } from "./github.js";
 
 const $ = (sel) => document.querySelector(sel);
-const PW_KEY = "writing-pw";
 
 const state = { index: { lists: [] }, week: null, exercise: null, feedback: null, submission: null };
-
-const session = {
-  get() { try { return sessionStorage.getItem(PW_KEY); } catch { return null; } },
-  set(v) { try { sessionStorage.setItem(PW_KEY, v); } catch { /* ignore */ } },
-  clear() { try { sessionStorage.removeItem(PW_KEY); } catch { /* ignore */ } },
-};
 
 function el(tag, attrs = {}, ...children) {
   const node = document.createElement(tag);
@@ -31,50 +22,29 @@ const countWords = (text) => (text.trim() ? text.trim().split(/\s+/).length : 0)
 const weeks = () => state.index.lists.filter((e) => e.has_writing).map((e) => e.id);
 const entryFor = (week) => state.index.lists.find((e) => e.id === week);
 
-async function loadEncrypted(path, password) {
-  const envelope = await fetchJSON(path);
-  return envelope ? decryptJSON(envelope, password) : null;
+function showMessage(message) {
+  $("#writing-status").textContent = message;
+  $("#writing-status").hidden = false;
+  $("#exercise").replaceChildren();
+  $("#feedback").replaceChildren();
+  $("#feedback").hidden = true;
 }
 
-// ---------- lock / unlock ----------
-function showLocked(message = "") {
-  $("#writing-locked").hidden = false;
-  $("#writing-unlocked").hidden = true;
-  const status = $("#unlock-status");
-  status.className = message ? "small err" : "small";
-  status.textContent = message;
-}
-
-async function unlock(password) {
+async function openWriting() {
   const list = weeks();
-  if (!list.length) {
-    showLocked("No reading & writing exercises have been published yet.");
-    return false;
-  }
-  $("#unlock-status").className = "small";
-  $("#unlock-status").textContent = "Unlocking…";
-  try {
-    // Decrypting the latest exercise doubles as the password check.
-    await loadWeek(list.at(-1), password);
-  } catch (err) {
-    showLocked(err.name === "OperationError" ? "Wrong password." : `Could not open: ${err.message}`);
-    return false;
-  }
-  session.set(password);
-  $("#writing-locked").hidden = true;
-  $("#writing-unlocked").hidden = false;
+  if (!list.length) return showMessage("No reading & writing exercises have been published yet.");
   const select = $("#writing-week");
   select.replaceChildren(...[...list].reverse().map((w) => el("option", { value: w }, w)));
-  select.value = state.week;
-  return true;
+  select.value = list.at(-1);
+  await loadWeek(list.at(-1));
 }
 
-async function loadWeek(week, password = session.get()) {
-  const exercise = await loadEncrypted(`writing/${week}.enc.json`, password);
+async function loadWeek(week) {
+  const exercise = await fetchEncrypted(`writing/${week}.enc.json`);
   if (!exercise) throw new Error(`exercise for ${week} not found`);
   const [feedback, submission] = await Promise.all([
-    loadEncrypted(`writing/feedback/${week}.enc.json`, password).catch(() => null),
-    loadEncrypted(`writing/submissions/${week}.enc.json`, password).catch(() => null),
+    fetchEncrypted(`writing/feedback/${week}.enc.json`).catch(() => null),
+    fetchEncrypted(`writing/submissions/${week}.enc.json`).catch(() => null),
   ]);
   Object.assign(state, { week, exercise, feedback, submission });
   render();
@@ -244,10 +214,9 @@ async function submit() {
   status.className = "small";
   status.textContent = "Encrypting and submitting…";
   try {
-    const envelope = await encryptJSON(submission, session.get());
     await putFile(
       `data/writing/submissions/${state.week}.enc.json`,
-      JSON.stringify(envelope) + "\n",
+      await encryptForCommit(submission),
       `Writing submission for ${state.week}`,
     );
     storage.set(`writing-submitted:${state.week}`, true);
@@ -262,25 +231,14 @@ async function submit() {
 
 // ---------- public ----------
 export function initWriting() {
-  $("#unlock-form").addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const pw = e.target.pw.value;
-    if (await unlock(pw)) e.target.pw.value = "";
-  });
-  $("#btn-lock").addEventListener("click", () => {
-    session.clear();
-    Object.assign(state, { exercise: null, feedback: null, submission: null });
-    $("#exercise").replaceChildren();
-    $("#feedback").replaceChildren();
-    showLocked();
-  });
-  $("#writing-week").addEventListener("change", (e) => loadWeek(e.target.value).catch((err) => showLocked(err.message)));
+  $("#writing-week").addEventListener("change", (e) =>
+    loadWeek(e.target.value).catch((err) => showMessage(`Could not open ${e.target.value}: ${err.message}`)),
+  );
   $("#show-en").addEventListener("change", (e) => document.body.classList.toggle("show-en", e.target.checked));
 }
 
 export async function showWriting(index) {
   state.index = index;
-  if (state.exercise) return; // already unlocked in this page view
-  const pw = session.get();
-  if (!pw || !(await unlock(pw))) showLocked($("#unlock-status").textContent);
+  if (state.exercise) return; // already loaded in this page view
+  await openWriting().catch((err) => showMessage(`Could not open the exercise: ${err.message}`));
 }

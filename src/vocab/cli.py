@@ -10,6 +10,7 @@ from zoneinfo import ZoneInfo
 import httpx
 
 from vocab import bank as bank_ops
+from vocab import crypto
 from vocab.config import Config, load_config
 from vocab.generator import build_list, iso_week_id
 from vocab.models import ListIndexEntry
@@ -69,7 +70,7 @@ def cmd_generate(args, config: Config, store: Store) -> None:
     all_topics = list(dict.fromkeys(topics + (lesson.topics if lesson else [])))
 
     list_id = iso_week_id(now.date())
-    if store.list_path(list_id).exists():
+    if store.has_list(list_id):
         if not args.force:
             sys.exit(f"List {list_id} already exists — pass --force to regenerate it.")
         if list_id in bank.applied_results:
@@ -114,9 +115,7 @@ def cmd_generate(args, config: Config, store: Store) -> None:
         f"Created {word_list.id}: {len(word_list.cards)} cards "
         f"({count['lesson']} from the lesson, {count['review']} review, {count['new']} new)"
     )
-    for card in word_list.cards:
-        tag = f" ({card.source})" if card.source != "new" else ""
-        print(f"  {card.front_en} — {card.back_hu}{tag}")
+    # The words themselves aren't printed: Actions logs are public.
 
 
 def cmd_audio(args, config: Config, store: Store) -> None:
@@ -145,7 +144,7 @@ def cmd_release(args, config: Config, store: Store) -> None:
         sys.exit(f"{audio} not found — run `vocab audio` first.")
 
     word_list = store.load_list(list_id)
-    body = "\n".join(f"- {c.front_en} — **{c.back_hu}**" for c in word_list.cards)
+    body = RELEASE_BODY.format(list_id=list_id, n=len(word_list.cards))
     url = GitHubReleases.from_env().upload(
         tag=f"week-{list_id}", name=f"Hungarian vocab {list_id}", body=body, file=audio
     )
@@ -156,6 +155,29 @@ def cmd_release(args, config: Config, store: Store) -> None:
         entry.audio_url = url
         store.save_index(index)
     print(f"Uploaded {url}")
+
+
+RELEASE_BODY = "Weekly Hungarian vocabulary audio for {list_id} ({n} words)."
+
+
+def cmd_encrypt_data(args, config: Config, store: Store) -> None:
+    """One-off: re-save plaintext data encrypted, and scrub word lists from release notes."""
+    index = store.load_index()
+    store.save_bank(store.load_bank())
+    for entry in index.lists:
+        store.save_list(store.load_list(entry.id))
+    store.save_index(index)
+    n_results = store.encrypt_results()
+    print(f"Encrypted bank, index, {len(index.lists)} lists and {n_results} test results")
+    cmd_feed(args, config, store)
+    if os.environ.get("GITHUB_TOKEN") and os.environ.get("GITHUB_REPOSITORY"):
+        from vocab.publish.release import GitHubReleases
+
+        releases = GitHubReleases.from_env()
+        for entry in index.lists:
+            body = RELEASE_BODY.format(list_id=entry.id, n=entry.n_cards)
+            if releases.set_body(f"week-{entry.id}", body):
+                print(f"Removed the word list from release week-{entry.id}")
 
 
 def cmd_feed(args, config: Config, store: Store) -> None:
@@ -222,8 +244,6 @@ def cmd_sentences(args, config: Config, store: Store) -> None:
     )
     store.save_list(word_list)
     print(f"Added {len(word_list.sentences)} test sentences to {list_id}")
-    for card in word_list.sentences:
-        print(f"  {card.front_en} — {card.back_hu}")
 
 
 def _writing_store(config: Config, store: Store, required: bool = True):
@@ -263,7 +283,7 @@ def cmd_writing(args, config: Config, store: Store) -> None:
         entry.writing_graded = False
         store.save_index(index)
     # Only the title is printed: the exercise itself stays private.
-    print(f"Created encrypted reading & writing exercise for {list_id}: {exercise.title_en}")
+    print(f"Created encrypted reading & writing exercise for {list_id}")
 
 
 def cmd_grade_writing(args, config: Config, store: Store) -> None:
@@ -343,7 +363,7 @@ def cmd_weekly(args, config: Config, store: Store) -> None:
     if args.scheduled:
         tz = ZoneInfo(config.schedule.timezone)
         now_local = datetime.now(tz)
-        if store.list_path(list_id).exists():
+        if store.has_list(list_id):
             print(f"Scheduled run: {list_id} was already generated — nothing to do.")
             return
         if not scheduled_run_due(now_local, config.schedule.deadline):
@@ -399,6 +419,7 @@ def build_parser() -> argparse.ArgumentParser:
         if name == "notify":
             p.add_argument("--no-telegram", action="store_true")
     add("feed", cmd_feed, "rebuild the podcast RSS feed")
+    add("encrypt-data", cmd_encrypt_data, "one-off: encrypt plaintext data, scrub release notes")
     add("apply-results", cmd_apply_results, "apply submitted test results to the word bank")
     weekly = add(
         "weekly", cmd_weekly, "apply results, generate words/sentences/writing, audio, feed"
@@ -416,7 +437,10 @@ def build_parser() -> argparse.ArgumentParser:
 def main() -> None:
     args = build_parser().parse_args()
     config = load_config(args.config)
-    store = Store(config.general.data_dir)
+    password = crypto.password_from_env()
+    if password is None:
+        sys.exit(f"{crypto.PASSWORD_ENV} must be set (WRITING_TAB secret): all data is encrypted.")
+    store = Store(config.general.data_dir, password)
     args.func(args, config, store)
 
 
