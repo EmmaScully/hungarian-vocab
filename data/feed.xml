@@ -8,6 +8,14 @@
     <itunes:category text="Education"/>
     <itunes:explicit>false</itunes:explicit>
     <item>
+      <title>Hungarian vocabulary 2026-W43</title>
+      <description>100 words: English, then Hungarian.</description>
+      <guid isPermaLink="false">hungarian-vocab-2026-W43</guid>
+      <pubDate>Mon, 19 Oct 2026 08:32:44 +0000</pubDate>
+      <enclosure url="https://github.com/EmmaScully/hungarian-vocab/releases/download/week-2026-W43/hungarian-vocab-2026-W43.mp3" length="6796913" type="audio/mpeg"/>
+      <itunes:duration>849</itunes:duration>
+    </item>
+    <item>
       <title>Hungarian vocabulary 2026-W41</title>
       <description>300 words: English, then Hungarian.</description>
       <guid isPermaLink="false">hungarian-vocab-2026-W41</guid>
