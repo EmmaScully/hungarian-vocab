@@ -377,11 +377,17 @@ def cmd_weekly(args, config: Config, store: Store) -> None:
     cmd_generate(args, config, store)
     _optional_step("Test sentences", cmd_sentences, args, config, store)
     _optional_step("Reading & writing exercise", cmd_writing, args, config, store)
-    cmd_audio(args, config, store)
-    if args.skip_release:
-        print("Skipping GitHub release (--skip-release)")
-    else:
-        cmd_release(args, config, store)
+    try:
+        cmd_audio(args, config, store)
+        if args.skip_release:
+            print("Skipping GitHub release (--skip-release)")
+        else:
+            cmd_release(args, config, store)
+    except (Exception, SystemExit) as e:
+        # Text-to-speech is the most fragile step; don't lose the list, sentences and
+        # exercise over it. The mp3 can be added later with Maintenance -> rebuild-audio.
+        print(f"::warning::Audio failed, so this week has no mp3 yet (run Maintenance -> "
+              f"rebuild-audio later): {type(e).__name__}: {e}")
     cmd_feed(args, config, store)
     _set_output("generated", "true")
 
